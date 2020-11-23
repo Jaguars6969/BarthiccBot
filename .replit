@@ -1,0 +1,2 @@
+language = "python3"
+run = "pip install discord\npip install webbot\npip install flask\npip install threading\npython3 main.py"
