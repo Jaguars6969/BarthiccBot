@@ -111,7 +111,7 @@ async def love(ctx, *message):
 async def on_ready():
 
 	print("ready")
-	await client.change_presence(status = discord.Game("You :smirk: (type !help to see the help menu)"))
+	await client.change_presence( activity=discord.Game(name="You :smirk: (type !help to see the help menu)"))
 
 
 
