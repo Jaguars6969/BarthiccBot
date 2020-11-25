@@ -105,9 +105,13 @@ async def love(ctx, *message):
 
 	await ctx.send(embed = discord.Embed(title = f"__**{names[0]} {heart} {names[1]}**__", description=f"```css\n{percentage}%\n```", color = random.choice(color)))
 
+
+
 @client.event
 async def on_ready():
-    print("ready")
+
+	print("ready")
+	await client.change_presence(status = discord.Game("You :smirk: (type !help to see the help menu)"))
 
 
 
