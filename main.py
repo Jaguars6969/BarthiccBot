@@ -1,13 +1,14 @@
 import discord
 from discord.ext import commands
 from webbot import Browser
+import os
 people =[]
 forbidden_words = ['fuck', 'shit', 'dick', 'bitch', 'nigga', 'nigger', 'ass', 'headass', 'dickhead', 'fucker', 'faggot', 'fag', 'pussy', "sex", "porn"]
 import random
 original = [chr(i) for i in range(127)]
 change = [chr(i) for i in range(127)]
 color = [discord.Color.red(), discord.Color.green(), discord.Color.blue(), discord.Color.purple(), discord.Color.orange()]
-from alive import keep_alive
+
 import time
 wass = ["Wassup", "Wassup Cuh", "Wassup Bluh", "Imma make sure they remember cuz I walk around with a lot of enimies", "sup", "sup dog"]
 hell = ["Hi", "Hello", "Hey", "HIHIHIHIHIHIHIHIHIHI", "Namaste", "Hola", "YOOOOOOOOOOOOO"]
@@ -416,6 +417,6 @@ async def dm(ctx, person:discord.Member, *message):
 
 		
 	
-keep_alive()
-client.run("NzcwMzcxMzUxNTc5ODUyODgw.X5cmOw.NpPKySMHEoq74QVNAhFG4-Ut9-Y")
+
+client.run(os.environ("DISCORD_TOKEN"))
 
