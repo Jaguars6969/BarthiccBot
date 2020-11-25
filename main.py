@@ -151,13 +151,28 @@ async def resume(ctx):
 
 @client.command()
 async def poll(ctx, *message):
+	options = ""
+	emojis = ["0️⃣", "1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔴", "🟡", "🟠", "🟢", "🔵", "🟣","🟤", "⚫", "⚪"]
+
 	messa = " ".join(message)
-	messa[0].upper()
+	
+	messaOptions = messa.split(";")
+	if len(messaOptions) >2:
+		for i in range(30):
+			try:
+				options += f"{emojis[i]} - {messaOptions[i+1]}\n"
+			except:
+				continue
 	if messa[len(message)-1]!= "?":
 		messa += "?"
-	message = await ctx.send(embed = discord.Embed(title=f"__**{messa}**__", description = f"Poll made by {ctx.author.mention}", color = random.choice(color)))
-	await message.add_reaction("\N{THUMBS UP SIGN}")
-	await message.add_reaction("\N{THUMBS DOWN SIGN}")
+	message = await ctx.send(embed = discord.Embed(title=f"__**{messaOptions[0]}\n\n\n{options}**__", description = f"Poll made by {ctx.author.mention}", color = random.choice(color)))
+	if len(messaOptions) > 2:
+		for i in range(len(messaOptions)-1):
+			await message.add_reaction(emojis[i])
+	else:
+		await message.add_reaction("\N{THUMBS UP SIGN}")
+		await message.add_reaction("\N{THUMBS DOWN SIGN}")
+
 
 		
 	
@@ -182,6 +197,13 @@ async def cat(ctx):
 	catEmbed = discord.Embed(title="**__CAT__** :cat:", color = random.choice(color))
 	catEmbed.set_image(url = random.choice(ca))
 	await ctx.send(embed = catEmbed)
+
+@client.command(aliases = [])
+async def waifu(ctx):
+	waif = ["https://qph.fs.quoracdn.net/main-qimg-1b2b48639a0af3f11c3964947ca99eb6", "https://thicc.mywaifulist.moe/waifus/2644/9990491ab8ff677202a435f64bbf37a5438780e14650244062c9356faea63be4_thumb.jpeg", "https://pbs.twimg.com/media/EfoABDaXgAA_WJg.jpg", "https://thicc.mywaifulist.moe/waifus/1192/89db9db0a26f5a3ea6cf6a077fc17c8d0f3ae979b92f068cb04a07ca2b221d0c_thumb.jpeg", "https://i.pinimg.com/originals/ee/59/5c/ee595c95b669d88b9c3c841dd5d02554.jpg", "https://thicc.mywaifulist.moe/waifus/344/56b6683a1aa73ca5f0ae7ce1ba3b18de3dffe059bcd530562fbd975a54b82dc1_thumb.png", "https://pm1.narvii.com/6872/10d1cafbd98699d21f987e56ee316e95b708bdf2r1-1000-1427v2_uhq.jpg", "https://cdn.discordapp.com/attachments/662390318703837234/780879320267751434/fd6e577311c306485a2791623ff20d3c.png", "https://cdn.discordapp.com/attachments/662390318703837234/780878494468276255/South.png", "https://cdn.discordapp.com/attachments/662390318703837234/780878064569548850/5bb41ab9844ad3e6932cf81dd39d414f_7c6b7ced4ea068ba5b8b3226c508af58.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877841729847306/f2tq37capn421.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877671776256061/dkKtV5d.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877407502204958/Saber.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877244326871060/tumblr_oy4x0wDFrq1smzgcuo1_400.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877114542260264/latest.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877021630300160/original.png", "https://cdn.discordapp.com/attachments/662390318703837234/780876257570979840/239835.png", "https://cdn.discordapp.com/attachments/662390318703837234/780876111441559552/6a705cdefb63285ff29869d72919a6c2.png"]
+	goatEmbed = discord.Embed(title="**__WAIFU__** :woman:", color = random.choice(color))
+	goatEmbed.set_image(url=random.choice(waif))
+	await ctx.send(embed = goatEmbed)
 
 @client.command()
 async def help(ctx):
