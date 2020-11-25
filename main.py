@@ -417,5 +417,5 @@ async def dm(ctx, person:discord.Member, *message):
 		
 	
 keep_alive()
-client.run("NzcwMzcxMzUxNTc5ODUyODgw.X5cmOw.YvEyQW_EBv_eTmrkRRY5yCTa6Oo")
+client.run("NzcwMzcxMzUxNTc5ODUyODgw.X5cmOw.lLl-bWKhJu0k0r4ujm6aykMReh4")
 
