@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from webbot import Browser
-import os
+
 people =[]
 forbidden_words = ['fuck', 'shit', 'dick', 'bitch', 'nigga', 'nigger', 'ass', 'headass', 'dickhead', 'fucker', 'faggot', 'fag', 'pussy', "sex", "porn"]
 import random
@@ -418,5 +418,5 @@ async def dm(ctx, person:discord.Member, *message):
 		
 	
 
-client.run(os.environ("DISCORD_TOKEN"))
+client.run("NzcwMzcxMzUxNTc5ODUyODgw.X5cmOw.UCIpoRSWCusmwmycE1jP9eudlFU")
 
