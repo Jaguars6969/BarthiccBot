@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from webbot import Browser
+import asyncio
 
 people =[]
 forbidden_words = ['fuck', 'shit', 'dick', 'bitch', 'nigga', 'nigger', 'ass', 'headass', 'dickhead', 'fucker', 'faggot', 'fag', 'pussy', "sex", "porn"]
@@ -435,6 +436,20 @@ async def dm(ctx, person:discord.Member, *message):
 	await ctx.send(embed=discord.Embed(description = f"{ctx.author.mention}'s message to {person.mention} sent", color = random.choice(color)))
 
 	time.sleep(2)
+tim = 0
+timeCreator = ""
+client.command()
+async def timer(ctx, hours, minutes, second):
+	
+
+	if hours > 10 and minutes > 120 and  second > 200:
+		tim = second + minutes * 60 + hours *3600
+		timeCreator = ctx.author
+
+	await ctx.send(embed=discord.Embed(title = "**__Timer__** :timer:", color = random.choice(color), description = f"{timeCreator.mention} set a timer for {hours} hours, {minutes} minutes, and {second} seconds"))
+	await asyncio.time(tim)
+	
+
 
 
 	
