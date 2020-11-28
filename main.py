@@ -3,13 +3,13 @@ from discord.ext import commands
 from webbot import Browser
 import asyncio
 
-people =[]
+
 forbidden_words = ['fuck', 'shit', 'dick', 'bitch', 'nigga', 'nigger', 'ass', 'headass', 'dickhead', 'fucker', 'faggot', 'fag', 'pussy', "sex", "porn"]
 import random
 original = [chr(i) for i in range(127)]
 change = [chr(i) for i in range(127)]
 color = [discord.Color.red(), discord.Color.green(), discord.Color.blue(), discord.Color.purple(), discord.Color.orange()]
-
+people = {}
 import time
 wass = ["Wassup", "Wassup Cuh", "Wassup Bluh", "Imma make sure they remember cuz I walk around with a lot of enimies", "sup", "sup dog"]
 hell = ["Hi", "Hello", "Hey", "HIHIHIHIHIHIHIHIHIHI", "Namaste", "Hola", "YOOOOOOOOOOOOO"]
@@ -451,6 +451,23 @@ async def timer(ctx, hours:int, minutes:int, second:int):
 	await asyncio.sleep(tim)
 	await ctx.send(embed=discord.Embed(title = "**__Timer__** :timer:", color = random.choice(color), description = f"{timeCreator.mention}'s timer is done"))
 	
+@client.command()
+async def stopwatch(ctx):
+	people[ctx.author] = time.time()
+	await ctx.send(embed=discord.Embed(title="**__Stopwatch__** :stopwatch:", description = f"{ctx.author.mention}'s stopwatch is started'"))
+
+@client.command()
+async def stop_stopwatch(ctx):
+	try:
+		timeElapsed = time.time() - people[ctx.author]
+	except:
+		await ctx.send(embed=discord.Embed(title="**__Stopwatch__** :stopwatch:", description = "You have to start a stopwatch to stop it"))
+		return
+	await ctx.send(embed=discord.Embed(title="**__Stopwatch__** :stopwatch:", description = f"{ctx.author.mention} took ***{round(timeElapsed, 1)} ***"))
+
+	
+
+
 
 
 
