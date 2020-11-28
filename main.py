@@ -454,7 +454,7 @@ async def timer(ctx, hours:int, minutes:int, second:int):
 @client.command()
 async def stopwatch(ctx):
 	people[ctx.author] = time.time()
-	await ctx.send(embed=discord.Embed(title="**__Stopwatch__** :stopwatch:", description = f"{ctx.author.mention}'s stopwatch is started'"))
+	await ctx.send(embed=discord.Embed(title="**__Stopwatch__** :stopwatch:", description = f"{ctx.author.mention}'s stopwatch is started", color=random.choice(color)))
 
 @client.command()
 async def stop_stopwatch(ctx):
@@ -463,7 +463,7 @@ async def stop_stopwatch(ctx):
 	except:
 		await ctx.send(embed=discord.Embed(title="**__Stopwatch__** :stopwatch:", description = "You have to start a stopwatch to stop it"))
 		return
-	await ctx.send(embed=discord.Embed(title="**__Stopwatch__** :stopwatch:", description = f"{ctx.author.mention} took ***{round(timeElapsed, 1)} ***"))
+	await ctx.send(embed=discord.Embed(title="**__Stopwatch__** :stopwatch:", description = f"{ctx.author.mention} took ***{round(timeElapsed, 1)} ***", color = random.choice(color)))
 
 	
 
