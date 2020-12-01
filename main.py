@@ -119,7 +119,7 @@ async def on_message(message):
 		pass
 
 	
-	await client.process_commands(message)
+	
 
 
 @client.event
@@ -481,16 +481,16 @@ async def stop_stopwatch(ctx):
 
 @client.command()
 async def troll(ctx, member:discord.Member, *message):
-	channel.purge(limit=1)
+	await ctx.channel.purge(limit=1)
 	troll.append(ctx.author)
 	trollVictim.append(member)
 	response.append(" ".join(message))
 	
-	await ctx.send(title=":smiling_imp: Troll :imp:", description= f"Troll created for {member.mention}")
+	await ctx.send(embed=discord.Embed(title=":smiling_imp: Troll :imp:", description= f"Troll created for {member.mention}", color = random.choice(color)))
 
 @client.command()
 async def stop_troll(ctx, member:discord.Member, *message):
-	channel.purge(limit=1)
+	await ctx.channel.purge(limit=1)
 	try:
 		index = troll.index(ctx.author)
 		troll.pop(index)
