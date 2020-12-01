@@ -39,7 +39,7 @@ replies = ['As I see it, yes.',
  'Yes.',
  'Yes – definitely.',
  'You may rely on it.']
-troll = []
+trollz = []
 trollVictim = []
 response = []
 
@@ -111,12 +111,25 @@ async def love(ctx, *message):
 
 @client.event
 async def on_message(message):
-	try:
-		for i in range(len(troll)-1):
-			if message.author == trollVictim[i]:
-				await ctx.send(title=":imp: **__Troll__** :smiling_imp:", description = f"**{response[i]}**")
-	except:
-		pass
+	
+	
+	if len(trollVictim) == 1:
+		if message.author.id == trollVictim[0]:
+			
+			await message.channel.send(embed=discord.Embed(title=":imp: **__Troll__** :smiling_imp:", description = f"**{response[0]}**", color = random.choice(color)))
+	else:
+		for i in range(len(trollVictim)-1):
+			
+			
+			if message.author.id == trollVictim[i]:
+				
+				await message.channel.send(embed=discord.Embed(title=":imp: **__Troll__** :smiling_imp:", description = f"**{response[i]}**", color = random.choice(color)))
+		
+	
+
+	await client.process_commands(message)
+
+	
 
 	
 	
@@ -481,19 +494,19 @@ async def stop_stopwatch(ctx):
 
 @client.command()
 async def troll(ctx, member:discord.Member, *message):
-	await ctx.channel.purge(limit=1)
-	troll.append(ctx.author)
-	trollVictim.append(member)
+	
+	trollz.append(ctx.message.author.id)
+	trollVictim.append(member.id)
 	response.append(" ".join(message))
 	
 	await ctx.send(embed=discord.Embed(title=":smiling_imp: Troll :imp:", description= f"Troll created for {member.mention}", color = random.choice(color)))
 
 @client.command()
 async def stop_troll(ctx, member:discord.Member, *message):
-	await ctx.channel.purge(limit=1)
+	
 	try:
-		index = troll.index(ctx.author)
-		troll.pop(index)
+		index = trollz.index(ctx.author.id)
+		trollz.pop(index)
 		trollVictim.pop(index)
 		response.pop(index)
 	except:
