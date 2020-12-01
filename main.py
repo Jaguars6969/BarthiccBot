@@ -115,6 +115,8 @@ async def on_message(message):
 	for i in range(len(troll)-1):
 		if message.author == trollVictim[i]:
 			await ctx.send(title=":imp: **__Troll__** :smiling_imp:", description = f"**{response[i]}**")
+
+	print(message)
 	await client.process_commands(message)
 
 
