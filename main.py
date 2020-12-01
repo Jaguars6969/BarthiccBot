@@ -122,7 +122,7 @@ async def on_message(message):
 async def on_ready():
 
 	print("ready")
-	await client.change_presence( activity=discord.Game(name="You :smirk: (type !help to see the help menu)"))
+	await client.change_presence( activity=discord.Game(name="You 😏 (type !help to see the help menu)"))
 
 
 
