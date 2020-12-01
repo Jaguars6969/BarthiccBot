@@ -39,6 +39,9 @@ replies = ['As I see it, yes.',
  'Yes.',
  'Yes – definitely.',
  'You may rely on it.']
+troll = []
+trollVictim = []
+response = []
 
 alphabet = {"a":1, "b":2, "c":3, "d":4, "e":5, "f":6, "g":7, "h":8, "i":9, "j":10, "k":11, "l":12, "m":13, "n":14, "o":15, "p":16, "q":17, "r":18, "s":19, "t":20, "u":21, "v":22, "w":23, "x":24, "y":25, "z":26, " ":0}
 players = {}
@@ -106,6 +109,13 @@ async def love(ctx, *message):
 
 	await ctx.send(embed = discord.Embed(title = f"__**{names[0]} {heart} {names[1]}**__", description=f"```css\n{percentage}%\n```", color = random.choice(color)))
 
+@client.event
+async def on_message(message):
+
+	for i in range(len(troll)-1):
+		if message.author == trollVictim[i]:
+			await ctx.send(title=":imp: **__Troll__** :smiling_imp:", description = f"**{response[i]}**")
+	await client.process_commands(message)
 
 
 @client.event
@@ -465,18 +475,31 @@ async def stop_stopwatch(ctx):
 		return
 	await ctx.send(embed=discord.Embed(title="**__Stopwatch__** :stopwatch:", description = f"{ctx.author.mention} took ***{round(timeElapsed, 1)} ***", color = random.choice(color)))
 
+@client.command()
+async def troll(ctx, member:discord.Member, *message):
+	channel.purge(limit=1)
+	troll.append(ctx.author)
+	trollVictim.append(member)
+	response.append(" ".join(message))
 	
+	await ctx.send(title=":smiling_imp: Troll :imp:", description= f"Troll created for {member.mention}")
 
-
-
-
-
+@client.command()
+async def stop_troll(ctx, member:discord.Member, *message):
+	channel.purge(limit=1)
+	try:
+		index = troll.index(ctx.author)
+		troll.pop(index)
+		trollVictim.pop(index)
+		response.pop(index)
+	except:
+		await ctx.send(embed=discord.Embed(title=":smiling_imp: Troll :imp:", description= f"Troll not found under the name of {ctx.author.mention}", color = random.choice(color)))
+		return
 	
-		
-		
+	await ctx.send(embed=discord.Embed(title=":smiling_imp: Troll :imp:", description= f"Troll deleted for {member.mention}", color = random.choice(color)))
 
-		
-	
+
+
 
 client.run("NzcwMzcxMzUxNTc5ODUyODgw.X5cmOw.UCIpoRSWCusmwmycE1jP9eudlFU")
 
