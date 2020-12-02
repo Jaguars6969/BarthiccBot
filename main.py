@@ -457,7 +457,11 @@ async def dm(ctx, person:discord.Member, *message):
 			return
 	dm = discord.Embed(title= "NEW DM",description= f"__**{ctx.author} sent:**__\n> {messa}")
 	dm.color = random.choice(color)
-	await person.send(embed = dm )
+	try:	
+		await person.send(embed = dm )
+	except:
+		await ctx.send(title="**__DM__**", description = f"{person.mention} blocked the bot, so you can't send dms to him :pensive:", color = random.choice(color))
+
 
 
 	await ctx.send(embed=discord.Embed(description = f"{ctx.author.mention}'s message to {person.mention} sent", color = random.choice(color)))
