@@ -499,6 +499,9 @@ async def stop_stopwatch(ctx):
 
 @client.command()
 async def troll(ctx, member:discord.Member, *message):
+	if message == [] or message == [""] or message == [" "]:
+		await ctx.send(title= ":imp: Troll :smiling_imp:", description = f"{ctx.author.mention}, you can't send a blank troll! :rage:")
+		return
 	if member.id != 770371351579852880:
 		trollz.append(ctx.message.author.id)
 		trollVictim.append(member.id)
