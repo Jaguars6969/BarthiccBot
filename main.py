@@ -112,7 +112,7 @@ async def love(ctx, *message):
 @client.event
 async def on_message(message):
 	
-	
+	print(message.author.id)
 	if len(trollVictim) == 1:
 		if message.author.id == trollVictim[0]:
 			
@@ -494,12 +494,17 @@ async def stop_stopwatch(ctx):
 
 @client.command()
 async def troll(ctx, member:discord.Member, *message):
-	
-	trollz.append(ctx.message.author.id)
-	trollVictim.append(member.id)
-	response.append(" ".join(message))
-	
-	await ctx.send(embed=discord.Embed(title=":smiling_imp: Troll :imp:", description= f"Troll created for {member.mention}", color = random.choice(color)))
+	if member.id == 770371351579852880:
+		trollz.append(ctx.message.author.id)
+		trollVictim.append(member.id)
+		response.append(" ".join(message))
+		
+		await ctx.send(embed=discord.Embed(title=":smiling_imp: Troll :imp:", description= f"Troll created for {member.mention}", color = random.choice(color)))
+	else:
+		trollEmbed = discord.Embed(title=":smiling_imp: Troll :imp:", description= f"You can't troll the bot", color = random.choice(color))
+
+		trollEmbed.set_image(url="https://tenor.com/view/nonono-sports-fingerwag-gif-4570396")
+		await ctx.send(embed=trollEmbed)
 
 @client.command()
 async def stop_troll(ctx, member:discord.Member, *message):
