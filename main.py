@@ -494,7 +494,7 @@ async def stop_stopwatch(ctx):
 
 @client.command()
 async def troll(ctx, member:discord.Member, *message):
-	if member.id == 770371351579852880:
+	if member.id != 770371351579852880:
 		trollz.append(ctx.message.author.id)
 		trollVictim.append(member.id)
 		response.append(" ".join(message))
