@@ -449,7 +449,7 @@ async def spam(ctx, *message):
 		
 @client.command()
 async def dm(ctx, person:discord.Member, *message):
-	await ctx.channel.purge(limit=1)
+	
 	messa = " ".join(message)
 	lowerMessa = messa.lower()
 	for i in forbidden_words:
