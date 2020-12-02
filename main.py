@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from webbot import Browser
 import asyncio
+import datetime
 
 
 forbidden_words = ['fuck', 'shit', 'dick', 'bitch', 'nigga', 'nigger', 'ass', 'headass', 'dickhead', 'fucker', 'faggot', 'fag', 'pussy', "sex", "porn"]
@@ -524,7 +525,13 @@ async def stop_troll(ctx, member:discord.Member, *message):
 	
 	await ctx.send(embed=discord.Embed(title=":smiling_imp: Troll :imp:", description= f"Troll deleted for {member.mention}", color = random.choice(color)))
 
-
+@client.command()
+async def alarm(ctx, finishTime, *message):
+	try:
+		hour = finishTime[0:2]
+	except:
+		hour = finishTime[0] 
+	finish = datetime.timedelta(hours=int(hour), minutes = int(finishTime[3:5]))
 
 
 client.run("NzcwMzcxMzUxNTc5ODUyODgw.X5cmOw.UCIpoRSWCusmwmycE1jP9eudlFU")
