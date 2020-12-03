@@ -113,7 +113,7 @@ async def love(ctx, *message):
 @client.event
 async def on_message(message):
 	
-	print(message.author.id)
+	
 	if len(trollVictim) == 1:
 		if message.author.id == trollVictim[0]:
 			
@@ -198,13 +198,17 @@ async def poll(ctx, *message):
 				continue
 	if messa[len(message)-1]!= "?":
 		messa += "?"
-	message = await ctx.send(embed = discord.Embed(title=f"__**{messaOptions[0]}\n\n\n{options}**__", description = f"Poll made by {ctx.author.mention}", color = random.choice(color)))
+	message = await ctx.send(embed = discord.Embed(title=f":chart_with_upward_trend: __**{messaOptions[0]} :chart_with_downward_trend:\n\n\n{options}**__", description = f"Poll made by {ctx.author.mention}", color = random.choice(color)))
 	if len(messaOptions) > 2:
 		for i in range(len(messaOptions)-1):
 			await message.add_reaction(emojis[i])
 	else:
 		await message.add_reaction("\N{THUMBS UP SIGN}")
 		await message.add_reaction("\N{THUMBS DOWN SIGN}")
+	
+	
+
+	await ctx.send(embed=discord.Embed(title = ":chart_with_upward_trend: The \"__**{messaOptions[0]}**__\" poll is finished :chart_with_downward_trend:", description = ""))
 
 
 		
@@ -433,7 +437,8 @@ async def rps(ctx, weapon):
 				loss+=1
 				rockEmbed.description = f"**{weapon} - {opponent}**"
 		await ctx.send(embed=rockEmbed)
-@client.command()
+
+"""@client.command()
 async def spam(ctx, *message):
 	spamPing = True
 	
@@ -443,7 +448,7 @@ async def spam(ctx, *message):
 			spamPing =False
 	if spamPing:
 		for i in range(5):
-			await ctx.send(" ".join(message))
+			await ctx.send(" ".join(message))"""
 		
 
 		
@@ -497,7 +502,7 @@ async def stop_stopwatch(ctx):
 		return
 	await ctx.send(embed=discord.Embed(title="**__Stopwatch__** :stopwatch:", description = f"{ctx.author.mention} took ***{round(timeElapsed, 1)} ***", color = random.choice(color)))
 
-@client.command()
+"""@client.command()
 async def troll(ctx, member:discord.Member, *message):
 	if message == [] or message == [""] or message == [" "]:
 		await ctx.send(title= ":imp: Troll :smiling_imp:", description = f"{ctx.author.mention}, you can't send a blank troll! :rage:")
@@ -526,15 +531,36 @@ async def stop_troll(ctx, member:discord.Member, *message):
 		await ctx.send(embed=discord.Embed(title=":smiling_imp: Troll :imp:", description= f"Troll not found under the name of {ctx.author.mention}", color = random.choice(color)))
 		return
 	
-	await ctx.send(embed=discord.Embed(title=":smiling_imp: Troll :imp:", description= f"Troll deleted for {member.mention}", color = random.choice(color)))
-
+	await ctx.send(embed=discord.Embed(title=":smiling_imp: Troll :imp:", description= f"Troll deleted for {member.mention}", color = random.choice(color)))"""
+rolex = {}
 @client.command()
-async def alarm(ctx, finishTime, *message):
+async def alarm(ctx, finishTime, timeOfDay, *message):
+	if ctx.author in rolex:
+		await ctx.send(embed = discord.Embed(title = "Alarm :alarm_clock:", description = "You can't have two alarm clocks at the same time!", color = random.choice(color)))
+	else:
+		rolex[ctx.author] = " ".join(message)
 	try:
-		hour = finishTime[0:2]
+		hour = int(finishTime[0:2])
+		minutes = int(finishTime[3:])
+		print(hour, minutes)
 	except:
-		hour = finishTime[0] 
-	finish = datetime.timedelta(hours=int(hour), minutes = int(finishTime[3:5]))
+		hour = int(finishTime[0]) 
+		minutes = int(finishTime[2:])
+		print(hour, minutes)
+
+	if timeOfDay.lower() == "pm":
+		hour += 12
+	finishTimeInSeconds = hour*60*60 + minutes*60 - time.time()
+	await ctx.send(embed = discord.Embed(title = "Alarm :alarm_clock:", description = f"{ctx.author.mention}'s alarm is set to {finishTime} {timeOfDay}\n {rolex[ctx.author]}", color = random.choice(color)))
+	print(finishTimeInSeconds)
+	print(finishTime)
+	print(time.time())
+	await asyncio.sleep(finishTimeInSeconds)
+	try:
+		await ctx.send(title = "Alarm :alarm_clock:", description = f"{ctx.author.mention} \n**__{rolex[ctx.author.mention]}")
+	except:
+		pass
+	
 
 
 client.run("NzcwMzcxMzUxNTc5ODUyODgw.X5cmOw.UCIpoRSWCusmwmycE1jP9eudlFU")
