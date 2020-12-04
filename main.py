@@ -12,8 +12,8 @@ change = [chr(i) for i in range(127)]
 color = [discord.Color.red(), discord.Color.green(), discord.Color.blue(), discord.Color.purple(), discord.Color.orange()]
 people = {}
 import time
-wass = ["Wassup", "Wassup Cuh", "Wassup Bluh", "Imma make sure they remember cuz I walk around with a lot of enimies", "sup", "sup dog"]
-hell = ["Hi", "Hello", "Hey", "HIHIHIHIHIHIHIHIHIHI", "Namaste", "Hola", "YOOOOOOOOOOOOO"]
+
+hell = ["Hi", "Hello", "Hey", "HIHIHIHIHIHIHIHIHIHI", "Namaste", "Hola", "YOOOOOOOOOOOOO", "Wassup", "Wassup Cuh", "Wassup Bluh", "Imma make sure they remember cuz I walk around with a lot of enimies", "sup", "sup dog"]
 prefix =["!8", "!"]
 client = commands.Bot(command_prefix = prefix)
 client.remove_command("help")
@@ -46,6 +46,37 @@ response = []
 
 alphabet = {"a":1, "b":2, "c":3, "d":4, "e":5, "f":6, "g":7, "h":8, "i":9, "j":10, "k":11, "l":12, "m":13, "n":14, "o":15, "p":16, "q":17, "r":18, "s":19, "t":20, "u":21, "v":22, "w":23, "x":24, "y":25, "z":26, " ":0}
 players = {}
+fareWellMessage = ""
+GreetingMessage = ""
+
+@client.event
+async def on_member_join(member):
+	channells = member.guild.channels
+	print(channells)
+	channel = channells[0]
+	print(channel)
+	if GreetingMessage == "":
+		greet = random.choice(hell)
+	else:
+		greet = GreetingMessage
+	
+    
+
+	await channel.send(embed=discord.Embed(title = "NEW PERSON :partying_face:", description = f"{greet}, {member.mention}", color = random.choice(color)))
+	
+
+@client.event
+async def on_member_remove(member):
+	channels = member.guild.channels
+	channel = channels[0]
+	if fareWellMessage == "":
+		greet = random.choice(hell)
+	else:
+		greet = fareWellMessage
+	
+    
+
+	await channel.send(embed=discord.Embed(title = "PERSON LEFT :pensive:", description = f"{greet}, {member.mention}", color = random.choice(color)))
 
 @client.command()
 async def dick(ctx, member:discord.Member= " "):
@@ -205,7 +236,12 @@ async def poll(ctx, *message):
 	else:
 		await message.add_reaction("\N{THUMBS UP SIGN}")
 		await message.add_reaction("\N{THUMBS DOWN SIGN}")
-	
+	reactions = message.reactions
+	for reaction in reactions:
+		print("hello" + reaction.users)
+		
+	await asyncio.sleep(600)
+	votes = {}
 	
 
 	await ctx.send(embed=discord.Embed(title = ":chart_with_upward_trend: The \"__**{messaOptions[0]}**__\" poll is finished :chart_with_downward_trend:", description = ""))
@@ -337,6 +373,26 @@ async def roll(ctx, max:int = 6):
 	diceEmbed.color = random.choice(color)
 	await ctx.send(embed = diceEmbed)
 
+
+@client.command()
+async def kick(ctx, member:discord.Member, *reasons):
+	if ctx.message.author.guild_permissions.administrator:
+
+		if member.guild_permissions.administrator:
+			await ctx.send(embed = discord.Embed(title = "Kick :hiking_boot:", description = "You cannot kick an administrator"))
+		else:
+			reason = " ".join(reasons)
+			await ctx.send(embed = discord.Embed(title = "Kicked :hiking_boot:", description = f"{member.mention} was kicked because:\n \"{reason}\"", color = random.choice(color)))
+
+			await member.send(embed = discord.Embed(title = "Kicked :hiking_boot:", description = f"You were kicked because:\n \"{reason}\"", color = random.choice(color)))
+			await member.kick()
+
+	else:
+		await ctx.send(embed = discord.Embed(title = "Kick :hiking_boot:", description = "YOU BUM! Only a administrator could kick people"))
+
+
+
+
 @client.command()
 async def flip(ctx):
 	
@@ -350,7 +406,7 @@ async def flip(ctx):
 
 @client.command(aliases = ["Wassup", "WASSUP"])
 async def wassup(ctx):
-	wassupEmbed = discord.Embed(description = f"{random.choice(wass)} {ctx.author.mention}")
+	wassupEmbed = discord.Embed(description = f"{random.choice(hell)} {ctx.author.mention}")
 	wassupEmbed.color = random.choice(color)
 	await ctx.send(embed = wassupEmbed)
 
@@ -438,17 +494,7 @@ async def rps(ctx, weapon):
 				rockEmbed.description = f"**{weapon} - {opponent}**"
 		await ctx.send(embed=rockEmbed)
 
-"""@client.command()
-async def spam(ctx, *message):
-	spamPing = True
-	
-	for i in message:
-		
-		if i[0] == "<" and i[1] =="@" and i[len(i)-1] == ">":
-			spamPing =False
-	if spamPing:
-		for i in range(5):
-			await ctx.send(" ".join(message))"""
+
 		
 
 		
@@ -502,8 +548,11 @@ async def stop_stopwatch(ctx):
 		return
 	await ctx.send(embed=discord.Embed(title="**__Stopwatch__** :stopwatch:", description = f"{ctx.author.mention} took ***{round(timeElapsed, 1)} ***", color = random.choice(color)))
 
-"""@client.command()
+@client.command()
 async def troll(ctx, member:discord.Member, *message):
+	if not ctx.message.author.guild_permissions.administrator:
+		await ctx.send(embed = discord.Embed(title = ":imp: Troll :smiling_imp", description = "YOU BUM! Only the administrator can use this command.", color = random.choice(color)))
+		return
 	if message == [] or message == [""] or message == [" "]:
 		await ctx.send(title= ":imp: Troll :smiling_imp:", description = f"{ctx.author.mention}, you can't send a blank troll! :rage:")
 		return
@@ -521,7 +570,9 @@ async def troll(ctx, member:discord.Member, *message):
 
 @client.command()
 async def stop_troll(ctx, member:discord.Member, *message):
-	
+	if not ctx.message.author.server_permissions.administrator:
+		await ctx.send(title = ":imp: Troll :smiling_imp", description = "YOU BUM! Only the administrator can use this command.", color = random.choice(color))
+		return
 	try:
 		index = trollz.index(ctx.author.id)
 		trollz.pop(index)
@@ -531,36 +582,43 @@ async def stop_troll(ctx, member:discord.Member, *message):
 		await ctx.send(embed=discord.Embed(title=":smiling_imp: Troll :imp:", description= f"Troll not found under the name of {ctx.author.mention}", color = random.choice(color)))
 		return
 	
-	await ctx.send(embed=discord.Embed(title=":smiling_imp: Troll :imp:", description= f"Troll deleted for {member.mention}", color = random.choice(color)))"""
+	await ctx.send(embed=discord.Embed(title=":smiling_imp: Troll :imp:", description= f"Troll deleted for {member.mention}", color = random.choice(color)))
 rolex = {}
 @client.command()
 async def alarm(ctx, finishTime, timeOfDay, *message):
 	if ctx.author in rolex:
 		await ctx.send(embed = discord.Embed(title = "Alarm :alarm_clock:", description = "You can't have two alarm clocks at the same time!", color = random.choice(color)))
+		return
 	else:
 		rolex[ctx.author] = " ".join(message)
 	try:
 		hour = int(finishTime[0:2])
 		minutes = int(finishTime[3:])
-		print(hour, minutes)
+		
 	except:
 		hour = int(finishTime[0]) 
 		minutes = int(finishTime[2:])
-		print(hour, minutes)
+		
 
 	if timeOfDay.lower() == "pm":
 		hour += 12
 	finishTimeInSeconds = hour*60*60 + minutes*60 - time.time()
 	await ctx.send(embed = discord.Embed(title = "Alarm :alarm_clock:", description = f"{ctx.author.mention}'s alarm is set to {finishTime} {timeOfDay}\n {rolex[ctx.author]}", color = random.choice(color)))
+	
 	print(finishTimeInSeconds)
-	print(finishTime)
+	print(hour*60*60 + minutes*60)
 	print(time.time())
 	await asyncio.sleep(finishTimeInSeconds)
 	try:
-		await ctx.send(title = "Alarm :alarm_clock:", description = f"{ctx.author.mention} \n**__{rolex[ctx.author.mention]}")
+		await ctx.send(title = "Alarm :alarm_clock:", description = f"{ctx.author.mention} \n**__{rolex[ctx.author.mention]}", color = random.choice(color))
 	except:
 		pass
 	
+@client.command()
+async def stop_alarm(ctx):
+	await ctx.send(title = "Alarm :alarm_clock:", description = f"{ctx.author.mention}'s alarm is cancelled", color = random.choice(color))
+	rolex.pop(ctx.author)
+
 
 
 client.run("NzcwMzcxMzUxNTc5ODUyODgw.X5cmOw.UCIpoRSWCusmwmycE1jP9eudlFU")
