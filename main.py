@@ -254,8 +254,7 @@ async def poll(ctx, *message):
 	for reaction in reactions:
 		print("hello" + reaction.users)
 		
-	await asyncio.sleep(600)
-	votes = {}
+	
 	
 
 	await ctx.send(embed=discord.Embed(title = ":chart_with_upward_trend: The \"__**{messaOptions[0]}**__\" poll is finished :chart_with_downward_trend:", description = ""))
