@@ -73,7 +73,7 @@ async def greeting(ctx, *message):
 	await ctx.send(embed = discord.Embed(title = "Greeting :wave:", description = f"Greeting changed to \"{GreetingMessage}\"", color = random.choice(color)))
 
 @client.command()
-async def greeting(ctx, *message):
+async def farewell(ctx, *message):
 	if not ctx.message.author.guild_permissions.administrator:
 		await ctx.send(embed = discord.Embed(title = "Farewell :pensive:", description = "YOU BUM! Only the administrator can use this command.", color = random.choice(color)))
 		return
@@ -243,7 +243,7 @@ async def poll(ctx, *message):
 				continue
 	if messa[len(message)-1]!= "?":
 		messa += "?"
-	message = await ctx.send(embed = discord.Embed(title=f":chart_with_upward_trend: __**{messaOptions[0]} :chart_with_downward_trend:\n\n\n{options}**__", description = f"Poll made by {ctx.author.mention}", color = random.choice(color)))
+	message = await ctx.send(embed = discord.Embed(title=f":chart_with_upwards_trend: __**{messaOptions[0]} :chart_with_downwards_trend: \n\n\n{options}**__", description = f"Poll made by {ctx.author.mention}", color = random.choice(color)))
 	if len(messaOptions) > 2:
 		for i in range(len(messaOptions)-1):
 			await message.add_reaction(emojis[i])
@@ -254,10 +254,10 @@ async def poll(ctx, *message):
 	for reaction in reactions:
 		print("hello" + reaction.users)
 		
-	
+	await asyncio.sleep(600)
 	
 
-	await ctx.send(embed=discord.Embed(title = ":chart_with_upward_trend: The \"__**{messaOptions[0]}**__\" poll is finished :chart_with_downward_trend:", description = ""))
+	await ctx.send(embed=discord.Embed(title = ":chart_with_upwards_trend: The \"__**{messaOptions[0]}**__\" poll is finished :chart_with_downwards_trend:", description = ""))
 
 
 		
@@ -564,7 +564,7 @@ async def stop_stopwatch(ctx):
 @client.command()
 async def troll(ctx, member:discord.Member, *message):
 	if not ctx.message.author.guild_permissions.administrator:
-		await ctx.send(embed = discord.Embed(title = ":imp: Troll :smiling_imp", description = "YOU BUM! Only the administrator can use this command.", color = random.choice(color)))
+		await ctx.send(embed = discord.Embed(title = ":imp: Troll :smiling_imp:", description = "YOU BUM! Only the administrator can use this command.", color = random.choice(color)))
 		return
 	if message == [] or message == [""] or message == [" "]:
 		await ctx.send(title= ":imp: Troll :smiling_imp:", description = f"{ctx.author.mention}, you can't send a blank troll! :rage:")
@@ -634,5 +634,5 @@ async def stop_alarm(ctx):
 
 
 
-client.run("NzcwMzcxMzUxNTc5ODUyODgw.X5cmOw.UCIpoRSWCusmwmycE1jP9eudlFU")
+client.run("NzcwMzcxMzUxNTc5ODUyODgw.X5cmOw.01EO1vjJaRweC3HiLr1XDC7j2Fw")
 
