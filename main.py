@@ -63,8 +63,22 @@ async def on_member_join(member):
     
 
 	await channel.send(embed=discord.Embed(title = "NEW PERSON :partying_face:", description = f"{greet}, {member.mention}", color = random.choice(color)))
-	
 
+@client.command()
+async def greeting(ctx, *message):
+	if not ctx.message.author.guild_permissions.administrator:
+		await ctx.send(embed = discord.Embed(title = "Greeting :wave:", description = "YOU BUM! Only the administrator can use this command.", color = random.choice(color)))
+		return
+	GreetingMessage = " ".join(message)
+	await ctx.send(embed = discord.Embed(title = "Greeting :wave:", description = f"Greeting changed to \"{GreetingMessage}\"", color = random.choice(color)))
+
+@client.command()
+async def greeting(ctx, *message):
+	if not ctx.message.author.guild_permissions.administrator:
+		await ctx.send(embed = discord.Embed(title = "Farewell :pensive:", description = "YOU BUM! Only the administrator can use this command.", color = random.choice(color)))
+		return
+	GreetingMessage = " ".join(message)
+	await ctx.send(embed = discord.Embed(title = "Farewell :pensive:", description = f"Farewell changed to \"{fareWellMessage}\"", color = random.choice(color)))
 @client.event
 async def on_member_remove(member):
 	channels = member.guild.channels
