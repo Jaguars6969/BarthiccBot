@@ -8,8 +8,6 @@ server_name = {}
 
 forbidden_words = ['fuck', 'shit', 'dick', 'bitch', 'nigga', 'nigger', 'ass', 'headass', 'dickhead', 'fucker', 'faggot', 'fag', 'pussy', "sex", "porn"]
 import random
-original = [chr(i) for i in range(127)]
-change = [chr(i) for i in range(127)]
 color = [discord.Color.red(), discord.Color.green(), discord.Color.blue(), discord.Color.purple(), discord.Color.orange()]
 people = {}
 import time
@@ -167,7 +165,10 @@ async def on_message(message):
 			servers[message.author.guild.id][message.author.id] = 1
 
 		else:
+			
 			servers[message.author.guild.id][message.author.id] += 1
+			if servers[message.author.guild.id][message.author.id] != 0 and servers[message.author.guild.id][message.author.id] % 100 == 0:
+				await message.channel.send(embed=discord.Embed(title=":arrow_up: **__Level Up__** :arrow_up:", description = f":partying_face: {message.author.mention} is now level {int(servers[message.author.guild.id][message.author.id] / 100)} :partying_face:", color = random.choice(color)))
 
 	
 	
@@ -188,7 +189,9 @@ async def on_message(message):
 
 	await client.process_commands(message)
 
-	
+@client.command()
+async def invitation_link(ctx):
+	await ctx.send()
 
 @client.command()
 async def user_stats(ctx, member : discord.Member = ""):
@@ -208,9 +211,9 @@ async def user_stats(ctx, member : discord.Member = ""):
 			numero+=1
 			memberServers += 1
 			memberTotalMessages += servers[i][person.id]
-			Full_string += f"\n**{numero}.** In {server_name[i]}, you have ```{servers[i][person.id]} messages```\n"
+			Full_string += f"\n**{numero}.** In {server_name[i]}, you have ```{servers[i][person.id]} messages```\nYou are on level ```{servers[i][person.id]//100}```\nYou have ```{((1+servers[i][person.id]//100)*100)-servers[i][person.id]}``` messages left before the next level\n\n"
 
-	Full_string += f"You are in ```{memberServers} servers```\nYou have ```{memberTotalMessages} messages in total```"
+	Full_string += f"You are in ```{memberServers} servers```\nYou have ```{memberTotalMessages} messages in total```\n"
 
 	await ctx.send(embed=discord.Embed(title= "**__User Stats__**", description = f"{Full_string}", color = random.choice(color)))
 	
