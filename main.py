@@ -3,7 +3,8 @@ from discord.ext import commands
 from webbot import Browser
 import asyncio
 import datetime
-
+servers = {}
+server_name = {}
 
 forbidden_words = ['fuck', 'shit', 'dick', 'bitch', 'nigga', 'nigger', 'ass', 'headass', 'dickhead', 'fucker', 'faggot', 'fag', 'pussy', "sex", "porn"]
 import random
@@ -66,6 +67,7 @@ async def on_member_join(member):
 
 @client.command()
 async def greeting(ctx, *message):
+
 	if not ctx.message.author.guild_permissions.administrator:
 		await ctx.send(embed = discord.Embed(title = "Greeting :wave:", description = "YOU BUM! Only the administrator can use this command.", color = random.choice(color)))
 		return
@@ -157,6 +159,17 @@ async def love(ctx, *message):
 
 @client.event
 async def on_message(message):
+	if not message.author.guild.id in servers:
+		servers[message.author.guild.id] = {message.author.id: 1}
+		server_name[message.author.guild.id] = message.author.guild.name
+	else:
+		if not message.author.id in servers[message.author.guild.id]:
+			servers[message.author.guild.id][message.author.id] = 1
+
+		else:
+			servers[message.author.guild.id][message.author.id] += 1
+
+	
 	
 	
 	if len(trollVictim) == 1:
@@ -177,7 +190,29 @@ async def on_message(message):
 
 	
 
+@client.command()
+async def user_stats(ctx, member : discord.Member = ""):
 	
+	if member == "":
+		person = ctx.author
+	else:
+		person = member
+	Full_string = f"{person.mention} stats are "
+	numero = 0
+	memberServers = 0
+	memberTotalMessages = 0
+	for i in servers:
+		
+
+		if person.id in servers[i]:
+			numero+=1
+			memberServers += 1
+			memberTotalMessages += servers[i][person.id]
+			Full_string += f"\n**{numero}.** In {server_name[i]}, you have ```{servers[i][person.id]} messages```\n"
+
+	Full_string += f"You are in ```{memberServers} servers```\nYou have ```{memberTotalMessages} messages in total```"
+
+	await ctx.send(embed=discord.Embed(title= "**__User Stats__**", description = f"{Full_string}", color = random.choice(color)))
 	
 
 
