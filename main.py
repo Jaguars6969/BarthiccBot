@@ -11,7 +11,7 @@ import random
 color = [discord.Color.red(), discord.Color.green(), discord.Color.blue(), discord.Color.purple(), discord.Color.orange()]
 people = {}
 import time
-
+repeat = ""
 hell = ["Hi", "Hello", "Hey", "HIHIHIHIHIHIHIHIHIHI", "Namaste", "Hola", "YOOOOOOOOOOOOO", "Wassup", "Wassup Cuh", "Wassup Bluh", "Imma make sure they remember cuz I walk around with a lot of enimies", "sup", "sup dog"]
 prefix =["!8", "!"]
 client = commands.Bot(command_prefix = prefix)
@@ -157,23 +157,29 @@ async def love(ctx, *message):
 
 @client.event
 async def on_message(message):
-	
+	global repeat
 	if not message.author.guild.id in servers:
 		servers[message.author.guild.id] = {message.author: 1}
 		server_name[message.author.guild.id] = message.author.guild.name
+		return
 	else:
 		if not message.author in servers[message.author.guild.id]:
 			servers[message.author.guild.id][message.author] = 1
+		
 
 		else:
 			
-			servers[message.author.guild.id][message.author] += 1
+			if repeat != message.author:
+				servers[message.author.guild.id][message.author] += 1
+				repeat = message.author
 			if servers[message.author.guild.id][message.author] != 0 and servers[message.author.guild.id][message.author] % 100 == 0:
+				
 				await message.channel.send(embed=discord.Embed(title=":arrow_up: **__Level Up__** :arrow_up:", description = f":partying_face: {message.author.mention} is now level {int(servers[message.author.guild.id][message.author] / 100)} :partying_face:", color = random.choice(color)))
+				
 
 	
 	
-	
+	 
 	if len(trollVictim) == 1:
 		if message.author == trollVictim[0]:
 			
@@ -197,7 +203,7 @@ async def links(ctx):
 async def standings(ctx):
 	standingsText = ""
 	standings = sorted(servers[ctx.message.author.guild.id].items(), key = lambda x : x[1], reverse = True)
-
+	woo = 0 
 	try:
 		for i in range(10):
 			
@@ -208,14 +214,15 @@ async def standings(ctx):
 			elif i == 2:
 				rank = ":third_place:"
 			else:
-				rank = f"```{i}.```"
-			
-			standingsText += f"> {rank} **{standings[i][0].nick} - {standings[i][1]}**\n\n"
+				rank = f"``{i+1}.``"
+			if standings[i][0] == "BarthiccBot":
+				woo+=1
+			standingsText += f"> {rank} **{standings[i+woo][0].name} - {standings[i+woo][1]}**\n\n"
 	except:
 		pass
 	
 
-	await ctx.send(embed=discord.Embed(title = f"Standings For {ctx.message.author.guild.name}", description = f"{standingsText}"))
+	await ctx.send(embed=discord.Embed(title = f"Standings For {ctx.message.author.guild.name}", description = f"{standingsText}", color = random.choice(color)))
 
 @client.command()
 async def user_stats(ctx, member : discord.Member = ""):
