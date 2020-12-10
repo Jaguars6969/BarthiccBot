@@ -694,6 +694,40 @@ async def stop_alarm(ctx):
 	await ctx.send(title = "Alarm :alarm_clock:", description = f"{ctx.author.mention}'s alarm is cancelled", color = random.choice(color))
 	rolex.pop(ctx.author)
 
+@client.command()
+async def choose(ctx, *messages):
+	if messages == [] or messages == [" "]:
+		await ctx.send(embed = discord.embed(title = "Choose :thinking_face:", description = "You have to write something first"))
+		return
+	ctxString = "BarthiccBot chooses..."
+	starting = 0
+	times = 1
+	try:
+		
+		times = int(messages[0])
+		messages.pop(0)
+		starting = 1
+	except:
+		pass
+	stringMessages = " ".join(messages)
+
+	SplittedList = stringMessages.split(",")
+
+	for i in range(len(SplittedList)):
+		print(SplittedList[i])
+		if "or" in SplittedList[i]:
+			orList = SplittedList[i].split("or")
+			
+			SplittedList.pop(i)
+			for a in orList:
+				SplittedList.append(a)
+	for i in range(starting, times):
+		randChoice = random.choice(SplittedList)
+		while randChoice == "" or randChoice == " ":
+			randChoice = random.choice(SplittedList)
+		ctxString += f"\n```{i+1}. {randChoice}```\n"
+
+	await ctx.send(embed=discord.Embed(title = "Choose :thinking_face:", description = f"{ctxString}", color = random.choice(color)))
 
 
 client.run("NzcwMzcxMzUxNTc5ODUyODgw.X5cmOw.01EO1vjJaRweC3HiLr1XDC7j2Fw")
