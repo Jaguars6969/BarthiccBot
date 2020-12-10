@@ -157,24 +157,25 @@ async def love(ctx, *message):
 
 @client.event
 async def on_message(message):
+	
 	if not message.author.guild.id in servers:
-		servers[message.author.guild.id] = {message.author.id: 1}
+		servers[message.author.guild.id] = {message.author: 1}
 		server_name[message.author.guild.id] = message.author.guild.name
 	else:
-		if not message.author.id in servers[message.author.guild.id]:
-			servers[message.author.guild.id][message.author.id] = 1
+		if not message.author in servers[message.author.guild.id]:
+			servers[message.author.guild.id][message.author] = 1
 
 		else:
 			
-			servers[message.author.guild.id][message.author.id] += 1
-			if servers[message.author.guild.id][message.author.id] != 0 and servers[message.author.guild.id][message.author.id] % 100 == 0:
-				await message.channel.send(embed=discord.Embed(title=":arrow_up: **__Level Up__** :arrow_up:", description = f":partying_face: {message.author.mention} is now level {int(servers[message.author.guild.id][message.author.id] / 100)} :partying_face:", color = random.choice(color)))
+			servers[message.author.guild.id][message.author] += 1
+			if servers[message.author.guild.id][message.author] != 0 and servers[message.author.guild.id][message.author] % 100 == 0:
+				await message.channel.send(embed=discord.Embed(title=":arrow_up: **__Level Up__** :arrow_up:", description = f":partying_face: {message.author.mention} is now level {int(servers[message.author.guild.id][message.author] / 100)} :partying_face:", color = random.choice(color)))
 
 	
 	
 	
 	if len(trollVictim) == 1:
-		if message.author.id == trollVictim[0]:
+		if message.author == trollVictim[0]:
 			
 			await message.channel.send(embed=discord.Embed(title=":imp: **__Troll__** :smiling_imp:", description = f"**{response[0]}**", color = random.choice(color)))
 	else:
@@ -190,8 +191,31 @@ async def on_message(message):
 	await client.process_commands(message)
 
 @client.command()
-async def invitation_link(ctx):
-	await ctx.send()
+async def links(ctx):
+	await ctx.send(embed = discord.Embed(title = ":link: Links for BarthiccBot :link:", description = "> :email: [Invitation Link](https://discord.com/api/oauth2/authorize?client_id=770371351579852880&permissions=137526352&scope=bot)"))
+@client.command()
+async def standings(ctx):
+	standingsText = ""
+	standings = sorted(servers[ctx.message.author.guild.id].items(), key = lambda x : x[1], reverse = True)
+
+	try:
+		for i in range(10):
+			
+			if i == 0:
+				rank = ":first_place:"
+			elif i == 1:
+				rank = ":second_place:"
+			elif i == 2:
+				rank = ":third_place:"
+			else:
+				rank = f"```{i}.```"
+			
+			standingsText += f"> {rank} **{standings[i][0].nick} - {standings[i][1]}**\n\n"
+	except:
+		pass
+	
+
+	await ctx.send(embed=discord.Embed(title = f"Standings For {ctx.message.author.guild.name}", description = f"{standingsText}"))
 
 @client.command()
 async def user_stats(ctx, member : discord.Member = ""):
@@ -580,7 +604,7 @@ async def timer(ctx, hours:int, minutes:int, second:int):
 		tim = second + minutes * 60 + hours *3600
 		timeCreator = ctx.author
 		
-
+	print(timeCreator.nick)
 	await ctx.send(embed=discord.Embed(title = "**__Timer__** :timer:", color = random.choice(color), description = f"{timeCreator.mention} set a timer for {hours} hours, {minutes} minutes, and {second} seconds"))
 	await asyncio.sleep(tim)
 	await ctx.send(embed=discord.Embed(title = "**__Timer__** :timer:", color = random.choice(color), description = f"{timeCreator.mention}'s timer is done"))
