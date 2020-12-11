@@ -238,11 +238,11 @@ async def user_stats(ctx, member : discord.Member = ""):
 	for i in servers:
 		
 
-		if person.id in servers[i]:
+		if person in servers[i]:
 			numero+=1
 			memberServers += 1
-			memberTotalMessages += servers[i][person.id]
-			Full_string += f"\n**{numero}.** In {server_name[i]}, you have ```{servers[i][person.id]} messages```\nYou are on level ```{servers[i][person.id]//100}```\nYou have ```{((1+servers[i][person.id]//100)*100)-servers[i][person.id]}``` messages left before the next level\n\n"
+			memberTotalMessages += servers[i][person]
+			Full_string += f"\n**{numero}.** In {server_name[i]}, you have ```{servers[i][person]} messages```\nYou are on level ```{servers[i][person]//100}```\nYou have ```{((1+servers[i][person]//100)*100)-servers[i][person]}``` messages left before the next level\n\n"
 
 	Full_string += f"You are in ```{memberServers} servers```\nYou have ```{memberTotalMessages} messages in total```\n"
 
