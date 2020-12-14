@@ -5,7 +5,7 @@ import asyncio
 import datetime
 servers = {}
 server_name = {}
-
+challenges = {}
 forbidden_words = ['fuck', 'shit', 'dick', 'bitch', 'nigga', 'nigger', 'ass', 'headass', 'dickhead', 'fucker', 'faggot', 'fag', 'pussy', "sex", "porn"]
 import random
 color = [discord.Color.red(), discord.Color.green(), discord.Color.blue(), discord.Color.purple(), discord.Color.orange()]
@@ -159,7 +159,7 @@ async def love(ctx, *message):
 async def on_message(message):
 	global repeat
 	if not message.author.guild.id in servers:
-		servers[message.author.guild.id] = {message.author: 1}
+		servers[message.author.guild.id] = {message.author: 0}
 		server_name[message.author.guild.id] = message.author.guild.name
 		return
 	else:
@@ -168,7 +168,8 @@ async def on_message(message):
 		
 
 		else:
-			
+			if message.author == "BarthiccBot#6858" or message.author == "BarthiccBot #6858":
+				return
 			if repeat != message.author:
 				servers[message.author.guild.id][message.author] += 1
 				repeat = message.author
@@ -198,7 +199,7 @@ async def on_message(message):
 
 @client.command()
 async def links(ctx):
-	await ctx.send(embed = discord.Embed(title = ":link: Links for BarthiccBot :link:", description = "> :email: [Invitation Link](https://discord.com/api/oauth2/authorize?client_id=770371351579852880&permissions=137526352&scope=bot)"))
+	await ctx.send(embed = discord.Embed(title = ":link: Links for BarthiccBot :link:", description = "> :email: [Invitation Link](https://discord.com/api/oauth2/authorize?client_id=770371351579852880&permissions=137526352&scope=bot)\n\n > :computer: [BarthiccBot Support Server](https://discord.gg/ePhUPNJaVN)", color = random.choice(color)))
 @client.command()
 async def standings(ctx):
 	standingsText = ""
@@ -222,7 +223,43 @@ async def standings(ctx):
 		pass
 	
 
-	await ctx.send(embed=discord.Embed(title = f"Standings For {ctx.message.author.guild.name}", description = f"{standingsText}", color = random.choice(color)))
+	await ctx.send(embed=discord.Embed(title = f"Standings :trophy: For :trophy: {ctx.message.author.guild.name}", description = f"{standingsText}", color = random.choice(color)))
+
+
+@client.command()
+async def random_order(ctx, *message):
+	optionsString = " ".join(message)
+	options = optionsString.split(",")
+	string = ""
+	random.shuffle(options)
+	for i in range(len(options)):
+		string+= f"```{i+1}. {options[i]}``` \n"
+	await ctx.send(embed=discord.Embed(title = "Random Order List :memo:", description = f"{string}", color = random.choice(color)))
+@client.command()
+async def teams(ctx, numOfTeams,  *message):
+	try:
+		team = int(numOfTeams)
+	except:
+		team = 2
+	peoples = " ".join(message)
+	people = peoples.split(",")
+	random.shuffle(people)
+	if len(people) % team == 0:
+		string = "These are the teams\n"
+		
+		for i in range(team):
+			string += f"``TEAM {i+1}``\n"
+			
+			for a in range(i+(len(people)//team)):
+				string += f"```{a+1}. {people[0]}```\n"
+				people.pop(0)
+
+
+		await ctx.send(embed=discord.Embed(title = ":basketball: Teams :football:", description = f"{string}", color = random.choice(color)))
+	else:
+		await ctx.send(embed=discord.Embed(title = ":basketball: Teams :football:", description = f"The number of people have to be divisible by the amount of teams", color = random.choice(color)))
+
+
 
 @client.command()
 async def user_stats(ctx, member : discord.Member = ""):
@@ -239,14 +276,20 @@ async def user_stats(ctx, member : discord.Member = ""):
 		
 
 		if person in servers[i]:
+			standings = sorted(servers[i].items(), key = lambda x : x[1], reverse = True)
+			try:
+				rank = f"Your rank in the server is ```{standings.index(person)}```"
+			except:
+				rank = "You are unranked in the server"
+
 			numero+=1
 			memberServers += 1
 			memberTotalMessages += servers[i][person]
-			Full_string += f"\n**{numero}.** In {server_name[i]}, you have ```{servers[i][person]} messages```\nYou are on level ```{servers[i][person]//100}```\nYou have ```{((1+servers[i][person]//100)*100)-servers[i][person]}``` messages left before the next level\n\n"
+			Full_string += f"\n**{numero}.** In {server_name[i]}, you have ```{servers[i][person]} messages```\nYou are on level ```{servers[i][person]//100}```\n{rank}\nYou have ```{((1+servers[i][person]//100)*100)-servers[i][person]}``` messages left before the next level\n\n"
 
-	Full_string += f"You are in ```{memberServers} servers```\nYou have ```{memberTotalMessages} messages in total```\n"
+	Full_string += f"You are in ``{memberServers} servers`` with BarthiccBot\nYou have ```{memberTotalMessages} messages in total```\n"
 
-	await ctx.send(embed=discord.Embed(title= "**__User Stats__**", description = f"{Full_string}", color = random.choice(color)))
+	await ctx.send(embed=discord.Embed(title= "**__User Stats__ :bar_chart:**", description = f"{Full_string}", color = random.choice(color)))
 	
 
 
@@ -326,7 +369,7 @@ async def poll(ctx, *message):
 	await asyncio.sleep(600)
 	
 
-	await ctx.send(embed=discord.Embed(title = ":chart_with_upwards_trend: The \"__**{messaOptions[0]}**__\" poll is finished :chart_with_downwards_trend:", description = ""))
+	await ctx.send(embed=discord.Embed(title = f":chart_with_upwards_trend: The \"__**{messaOptions[0]}**__\" poll is finished :chart_with_downwards_trend:", description = "", color = random.choice(color)))
 
 
 		
@@ -365,7 +408,10 @@ async def help(ctx):
 	helpEmbed = discord.Embed(title="Welcome to BarthiccBot!\n This is the help manual :sunglasses:", description = f"__**Prefix Commands :computer:**__\n> ```{prefix[1]}add_prefix <prefix>```\n> ```{prefix[1]}delete_prefix <prefix>```\n> ```{prefix[1]}default_prefix <prefix>```\n> ```{prefix[1]}prefixes```\n\n__** :game_die: Fun :8ball: Games :coin: **__\n> ```{prefix[1]}8ball <Your question>```\n> ```{prefix[1]}roll <max number>```\n> ```{prefix[1]}flip```\n> ```{prefix[1]}rps <weapon (rock, paper, or scissor)>```\n__**Chat :wave:**__\n> ```{prefix[1]}wassup```\n> ```{prefix[1]}hi```\n> ```{prefix[1]}uwu```\n> ```{prefix[1]}owo```\n> ```{prefix[1]}pain```\n>  ```{prefix[1]}bye```\n\n__**:imp: spam :smiling_imp:**__\n> ```{prefix[1]}spam <Message>```\n> ```{prefix[1]}spamPing <discord member>```\n\n__**DM :smirk:**__\n ```{prefix[1]}dm <person> <message>``` ")
 	helpEmbed.color = random.choice(color)
 	helpEmbed.set_image(url="https://media.tenor.com/images/6aaf1a81c0346f798ac3ceac7e8442dd/tenor.png")
-	await ctx.author.send(embed = helpEmbed)
+	try:
+		await ctx.author.send(embed = helpEmbed)
+	except:
+		await ctx.send(embed = f"{ctx.author.mention}\n{helpEmbed}")
 
 @client.command()
 async def prefixes(ctx):
@@ -373,7 +419,7 @@ async def prefixes(ctx):
 	for i in prefix:
 		string += i + ", "
 
-	prefEmbed = discord.Embed(title = 'Existing Prefixes', description = f"***These are your current prefixes that you can use***\n```{string}```")
+	prefEmbed = discord.Embed(title = ':exclamation: Existing Prefixes :exclamation:', description = f"***These are your current prefixes that you can use***\n```{string}```")
 	prefEmbed.color = random.choice(color)
 	await ctx.send(embed=prefEmbed)
 @client.command()
@@ -425,7 +471,7 @@ async def ball(ctx, *place):
 			descrip = f"> Q: __{jo}__\n> **A: {random.choice(much)}**"
 		elif lowerPlace[1] == "old":
 			descrip = f"> Q: __{jo}__\n> **A: {random.randint(18,100)}**"
-	elif "test" in lowerPlace:
+	elif "test" in lowerPlace[len(lowerPlace)-1] or "test" in lowerPlace[len(lowerPlace)-1]:
 		
 	
 			descrip = f"> Q: __{jo}__\n> A: **{random.randint(50, 100)}**"
@@ -626,7 +672,7 @@ async def stop_stopwatch(ctx):
 	try:
 		timeElapsed = time.time() - people[ctx.author]
 	except:
-		await ctx.send(embed=discord.Embed(title="**__Stopwatch__** :stopwatch:", description = "You have to start a stopwatch to stop it"))
+		await ctx.send(embed=discord.Embed(title="**__Stopwatch__** :stopwatch:", description = "You have to start a stopwatch to stop it", color = random.choice(color)))
 		return
 	await ctx.send(embed=discord.Embed(title="**__Stopwatch__** :stopwatch:", description = f"{ctx.author.mention} took ***{round(timeElapsed, 1)} ***", color = random.choice(color)))
 
@@ -636,7 +682,7 @@ async def troll(ctx, member:discord.Member, *message):
 		await ctx.send(embed = discord.Embed(title = ":imp: Troll :smiling_imp:", description = "YOU BUM! Only the administrator can use this command.", color = random.choice(color)))
 		return
 	if message == [] or message == [""] or message == [" "]:
-		await ctx.send(title= ":imp: Troll :smiling_imp:", description = f"{ctx.author.mention}, you can't send a blank troll! :rage:")
+		await ctx.send(title= ":imp: Troll :smiling_imp:", description = f"{ctx.author.mention}, you can't send a blank troll! :rage:", color = random.choice(color))
 		return
 	if member.id != 770371351579852880:
 		trollz.append(ctx.message.author.id)
@@ -704,18 +750,12 @@ async def stop_alarm(ctx):
 @client.command()
 async def choose(ctx, *messages):
 	if messages == [] or messages == [" "]:
-		await ctx.send(embed = discord.embed(title = "Choose :thinking_face:", description = "You have to write something first"))
+		await ctx.send(embed = discord.embed(title = "Choose :thinking_face:", description = "You have to write something first", color = random.choice(color)))
 		return
 	ctxString = "BarthiccBot chooses..."
 	starting = 0
 	times = 1
-	try:
-		
-		times = int(messages[0])
-		messages.pop(0)
-		starting = 1
-	except:
-		pass
+	
 	stringMessages = " ".join(messages)
 
 	SplittedList = stringMessages.split(",")
