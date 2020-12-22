@@ -6,7 +6,7 @@ import datetime
 servers = {}
 server_name = {}
 challenges = {}
-forbidden_words = ['fuck', 'shit', 'dick', 'bitch', 'nigga', 'nigger', 'ass', 'headass', 'dickhead', 'fucker', 'faggot', 'fag', 'pussy', "sex", "porn"]
+forbidden_words = [ 'nigga', 'nigger', 'ass', 'headass', 'dickhead', 'fucker', 'faggot', 'fag']
 import random
 color = [discord.Color.red(), discord.Color.green(), discord.Color.blue(), discord.Color.purple(), discord.Color.orange()]
 people = {}
@@ -232,12 +232,15 @@ async def love(ctx, *message):
 async def on_message(message):
 	exp = len("".join(message.content.split(" ")))
 	
+	
 	global repeat
 	try:
 		if servers == {}:
 			print(datetime.datetime.now())
-		if exp > 10:
-			exp = 10
+
+		
+		if exp > 20:
+			exp = 20
 		if not message.author.guild.id in servers:
 
 			servers[message.author.guild.id] = {message.author: exp}
@@ -256,7 +259,7 @@ async def on_message(message):
 					
 				if servers[message.author.guild.id][message.author] != 0 and servers[message.author.guild.id][message.author] % 500 == 0:
 					
-					await message.channel.send(embed=discord.Embed(title=":arrow_up: **__Level Up__** :arrow_up:", description = f":partying_face: {message.author.mention} is now level {int(servers[message.author.guild.id][message.author] / 100)} :partying_face:", color = random.choice(color)))
+					await message.channel.send(embed=discord.Embed(title=":arrow_up: **__Level Up__** :arrow_up:", description = f":partying_face: {message.author.mention} is now level {int(servers[message.author.guild.id][message.author] / 500)} :partying_face:", color = random.choice(color)))
 	except:
 		pass
 
