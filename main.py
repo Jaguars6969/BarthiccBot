@@ -1,3 +1,4 @@
+#emoji and link checker
 import discord
 from discord.ext import commands
 from webbot import Browser
@@ -47,6 +48,35 @@ alphabet = {"a":1, "b":2, "c":3, "d":4, "e":5, "f":6, "g":7, "h":8, "i":9, "j":1
 players = {}
 fareWellMessage = ""
 GreetingMessage = ""
+
+@client.command()
+async def cartiText(ctx, *text):
+	texts = []
+	for i in text:
+		texts.append(i)
+	for i in range(texts):
+		if texts[i].lower() == "for":
+			texts.pop(text)
+			texts.insert(i, "4")
+	textString =  " ".join(texts)
+	textsString = []
+	for i in textString:
+		if i.lower() == "e":
+			textsString.append(i)
+			continue
+		if random.randint(0, 1) == 0:
+			textsString.append(i.upper())
+		else:
+			textsString.append(i.lower())
+
+		if random.randint(0, 3) == 0:
+			textsString.append(">")
+
+	for i in range(random.randint(1, 6)):
+		textsString.append(":kiss: ")
+	await ctx.send(embed=discord.Embed(title = "CaRTi t3Xt :vampire: :broken_heart:", description = "".join(textsString), color = random.choice(color)))
+
+
 @client.command()
 async def competition(ctx, days = 1):
 	if not ctx.author.guild.id in league:
@@ -121,20 +151,9 @@ async def competition_stats(ctx, host:discord.Member=""):
 
 
 @client.event
-async def on_member_join(member):
+async def on_member_join(membe):
 	print(1)
-	channells = member.guild.channels
-	print(channells)
-	channel = channells[0]
-	print(channel)
-	if GreetingMessage == "":
-		greet = random.choice(hell)
-	else:
-		greet = GreetingMessage
 	
-    
-
-	await member.guild.channel.send(embed=discord.Embed(title = "NEW PERSON :partying_face:", description = f"{greet}, {member.mention}", color = random.choice(color)))
 
 @client.command()
 async def greeting(ctx, *message):
@@ -227,17 +246,25 @@ async def love(ctx, *message):
 
 
 	await ctx.send(embed = discord.Embed(title = f"__**{names[0]} {heart} {names[1]}**__", description=f"```css\n{percentage}%\n```", color = random.choice(color)))
-
+repeatNum = 0
 @client.event
 async def on_message(message):
-	exp = len("".join(message.content.split(" ")))
-	
-	
+	messageSplit = message.content.split(" ")
+	for i in messageSplit:
+		if "http" in i or ".com" in i or i.count(":") > 1 or "U0" in i:
+			messageSplit.remove(i)
+	exp = len("".join(messageSplit))
+	global repeatNum
 	global repeat
 	try:
 		if servers == {}:
 			print(datetime.datetime.now())
-
+		if message.author == repeat:
+			
+			repeatNum += 1
+			
+		else:
+			repeatNum = 0
 		
 		if exp > 20:
 			exp = 20
@@ -254,12 +281,17 @@ async def on_message(message):
 			else:
 				if message.author == "BarthiccBot#6858" or message.author == "BarthiccBot #6858":
 					return
+				before = servers[message.author.guild.id][message.author]
+				if repeatNum < 5:
+					
+					servers[message.author.guild.id][message.author] += exp
+					after = before = servers[message.author.guild.id][message.author]//500
+					if after > before:
+						await message.channel.send(embed=discord.Embed(title=":arrow_up: **__Level Up__** :arrow_up:", description = f":partying_face: {message.author.mention} is now level {int(servers[message.author.guild.id][message.author] / 500)} :partying_face:", color = random.choice(color)))
+				repeat = message.author
 				
-				servers[message.author.guild.id][message.author] += exp
 					
-				if servers[message.author.guild.id][message.author] != 0 and servers[message.author.guild.id][message.author] % 500 == 0:
 					
-					await message.channel.send(embed=discord.Embed(title=":arrow_up: **__Level Up__** :arrow_up:", description = f":partying_face: {message.author.mention} is now level {int(servers[message.author.guild.id][message.author] / 500)} :partying_face:", color = random.choice(color)))
 	except:
 		pass
 
