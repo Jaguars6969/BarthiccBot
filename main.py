@@ -54,22 +54,23 @@ async def cartiText(ctx, *text):
 	texts = []
 	for i in text:
 		texts.append(i)
-	for i in range(texts):
+	for i in range(len(texts)):
 		if texts[i].lower() == "for":
-			texts.pop(text)
+			texts.pop(i)
 			texts.insert(i, "4")
 	textString =  " ".join(texts)
 	textsString = []
 	for i in textString:
-		if i.lower() == "e":
-			textsString.append(i)
+		
+		if str(i.lower()) == "e":
+			textsString.append("3")
 			continue
 		if random.randint(0, 1) == 0:
 			textsString.append(i.upper())
 		else:
 			textsString.append(i.lower())
 
-		if random.randint(0, 3) == 0:
+		if random.randint(0, 7) == 0:
 			textsString.append(">")
 
 	for i in range(random.randint(1, 6)):
@@ -151,7 +152,7 @@ async def competition_stats(ctx, host:discord.Member=""):
 
 
 @client.event
-async def on_member_join(membe):
+async def on_member_join(Member):
 	print(1)
 	
 
