@@ -941,5 +941,5 @@ async def choose(ctx, *messages):
 	await ctx.send(embed=discord.Embed(title = "Choose :thinking_face:", description = f"{ctxString}", color = random.choice(color)))
 
 
-client.run("NzcwMzcxMzUxNTc5ODUyODgw.X5cmOw.01EO1vjJaRweC3HiLr1XDC7j2Fw")
+client.run("NzcwMzcxMzUxNTc5ODUyODgw.X5cmOw.ro1Wl0rToU8FodI2wcLo4r3RLvo")
 
