@@ -48,7 +48,51 @@ alphabet = {"a":1, "b":2, "c":3, "d":4, "e":5, "f":6, "g":7, "h":8, "i":9, "j":1
 players = {}
 fareWellMessage = ""
 GreetingMessage = ""
+antiSpam = []
+mutes = {}
 
+
+@client.command()
+async def blackjack(ctx):
+	cards = [1, 2, 3, 4, 5, 6, 7, 8, 9,10, 'K', 'Q', 'J' ]
+	suites = [":hearts:", ":spades:", ":clovers:", ":diamonds:"]
+	ctx.send(embed=discord.Embed(title=":hearts: :diamonds:blackjack:spades: :clovers:", description=""))
+
+@client.command()
+async def mute(ctx, member:discord.Member):
+	if not ctx.message.author.guild_permissions.administrator:
+		await ctx.send(embed = discord.Embed(title = "Mute :mute:", description = "YOU BUM! Only the administrator can use this command.", color = random.choice(color)))
+		return
+	if not ctx.author.guild.id in mutes:
+		mutes[ctx.author.guild.id] = [member.id]
+		
+	mutes[ctx.author.guild.id].append(member.id)
+	await ctx.send(embed = discord.Embed(title = "Mute :mute:", description = f"You have muted {member.name}", color = random.choice(color)))
+@client.command()
+async def unmute(ctx, member:discord.Member):
+	
+	if not ctx.message.author.guild_permissions.administrator:
+		await ctx.send(embed = discord.Embed(title = "Mute :mute:", description = "YOU BUM! Only the administrator can use this command.", color = random.choice(color)))
+		return
+	try:
+		mutes[ctx.author.guild.id].remove(member.id)
+		await ctx.send(embed = discord.Embed(title = "Mute :mute:", description = f"You have unmuted {member.name}", color = random.choice(color)))
+	except:
+		await ctx.send(embed = discord.Embed(title = "Mute :mute:", description = f"The person has not been muted before", color = random.choice(color)))
+	
+@client.command()
+async def antispam(ctx):
+	if not ctx.message.author.guild_permissions.administrator:
+		await ctx.send(embed = discord.Embed(title = "Anti-Spam", description = "YOU BUM! Only the administrator can use this command.", color = random.choice(color)))
+		return
+	if ctx.author.guild.id in antiSpam:
+		antiSpam.remove(ctx.author.guild.id)
+		await ctx.send(embed = discord.Embed(title = "Anti-Spam", description = "Server is not using anti spam any more", color = random.choice(color)))
+	else:
+		antiSpam.append(ctx.author.guild.id)
+		await ctx.send(embed = discord.Embed(title = "Anti-Spam", description = "Bot is activating anti spam for server", color = random.choice(color)))
+
+	
 @client.command()
 async def cartiText(ctx, *text):
 	texts = []
@@ -151,9 +195,8 @@ async def competition_stats(ctx, host:discord.Member=""):
 	await ctx.send(embed=discord.Embed(title="Leauge :trophy:", description = f"{host.mention}'s competition standings:\n{standingsText}", color = random.choice(color)))
 
 
-@client.event
-async def on_member_join(Member):
-	print(1)
+
+
 	
 
 @client.command()
@@ -250,16 +293,39 @@ async def love(ctx, *message):
 repeatNum = 0
 @client.event
 async def on_message(message):
+	
+	try:
+		woo = message.author.guild.id
+		woo = message.author.dm_channel.id
+		await client.process_commands(message)
+		
+		return
+	except:
+		pass
+	try:
+		if message.author.id in mutes[message.author.guild.id]:
+			try:
+				await message.channel.purge(limit=1)
+				return
+			except:
+				await message.channel.send(titile="Anti-Spam", description = "You have to give the bot permission to \"manage channels\" by asking your admin to go to 'server settings'>'roles'>'BarthiccBot'>'manage channels' and flipping the switch!")
+			
+	except:
+		pass
 	messageSplit = message.content.split(" ")
 	for i in messageSplit:
-		if "http" in i or ".com" in i or i.count(":") > 1 or "U0" in i:
+		if "http" in i or ".com" in i or i.count(":") > 1 or "U0" in i or "!standings" in i:
 			messageSplit.remove(i)
-	exp = len("".join(messageSplit))
+	pop = "".join(messageSplit)
+	exp = len(pop)
+	if "am" in pop or "are" in pop or "is" in pop:
+		if random.randint(0, 3) == 0:
+			await message.add_reaction("🧢")
 	global repeatNum
 	global repeat
 	try:
-		if servers == {}:
-			print(datetime.datetime.now())
+
+
 		if message.author == repeat:
 			
 			repeatNum += 1
@@ -295,10 +361,20 @@ async def on_message(message):
 					
 	except:
 		pass
-
+	try:	
+		if message.author.guild.id in antiSpam:
+			if repeatNum > 10:
+				try:
+					await message.channel.purge(limit=1)
+					await asyncio.sleep(0.25)
+				except:
+					await message.channel.send(embed=discord.Embed(title="Anti-Spam", description = "You have to give the bot permission to \"manage channels\" by asking your admin to go to 'server settings'>'roles'>'BarthiccBot'>'manage channels' and flipping the switch!", color = random.choice(color)))
+	except:
+		pass
+	
 	try:
-		if servers == {}:
-			print(datetime.datetime.now())
+
+
 		if exp > 10:
 			exp = 10
 		if message.author.guild.id in league:
@@ -499,8 +575,8 @@ async def poll(ctx, *message):
 		await message.add_reaction("\N{THUMBS UP SIGN}")
 		await message.add_reaction("\N{THUMBS DOWN SIGN}")
 	reactions = message.reactions
-	for reaction in reactions:
-		print("hello" + reaction.users)
+
+
 		
 	await asyncio.sleep(600)
 	
@@ -534,8 +610,8 @@ async def cat(ctx):
 
 @client.command(aliases = [])
 async def waifu(ctx):
-	waif = ["https://qph.fs.quoracdn.net/main-qimg-1b2b48639a0af3f11c3964947ca99eb6", "https://thicc.mywaifulist.moe/waifus/2644/9990491ab8ff677202a435f64bbf37a5438780e14650244062c9356faea63be4_thumb.jpeg", "https://pbs.twimg.com/media/EfoABDaXgAA_WJg.jpg", "https://thicc.mywaifulist.moe/waifus/1192/89db9db0a26f5a3ea6cf6a077fc17c8d0f3ae979b92f068cb04a07ca2b221d0c_thumb.jpeg", "https://i.pinimg.com/originals/ee/59/5c/ee595c95b669d88b9c3c841dd5d02554.jpg", "https://thicc.mywaifulist.moe/waifus/344/56b6683a1aa73ca5f0ae7ce1ba3b18de3dffe059bcd530562fbd975a54b82dc1_thumb.png", "https://pm1.narvii.com/6872/10d1cafbd98699d21f987e56ee316e95b708bdf2r1-1000-1427v2_uhq.jpg", "https://cdn.discordapp.com/attachments/662390318703837234/780879320267751434/fd6e577311c306485a2791623ff20d3c.png", "https://cdn.discordapp.com/attachments/662390318703837234/780878494468276255/South.png", "https://cdn.discordapp.com/attachments/662390318703837234/780878064569548850/5bb41ab9844ad3e6932cf81dd39d414f_7c6b7ced4ea068ba5b8b3226c508af58.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877841729847306/f2tq37capn421.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877671776256061/dkKtV5d.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877407502204958/Saber.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877244326871060/tumblr_oy4x0wDFrq1smzgcuo1_400.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877114542260264/latest.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877021630300160/original.png", "https://cdn.discordapp.com/attachments/662390318703837234/780876257570979840/239835.png", "https://cdn.discordapp.com/attachments/662390318703837234/780876111441559552/6a705cdefb63285ff29869d72919a6c2.png"]
-	goatEmbed = discord.Embed(title="**__WAIFU__** :woman:", color = random.choice(color))
+	waif = ["https://qph.fs.quoracdn.net/main-qimg-1b2b48639a0af3f11c3964947ca99eb6", "https://thicc.mywaifulist.moe/waifus/2644/9990491ab8ff677202a435f64bbf37a5438780e14650244062c9356faea63be4_thumb.jpeg", "https://pbs.twimg.com/media/EfoABDaXgAA_WJg.jpg", "https://thicc.mywaifulist.moe/waifus/1192/89db9db0a26f5a3ea6cf6a077fc17c8d0f3ae979b92f068cb04a07ca2b221d0c_thumb.jpeg", "https://i.pinimg.com/originals/ee/59/5c/ee595c95b669d88b9c3c841dd5d02554.jpg", "https://thicc.mywaifulist.moe/waifus/344/56b6683a1aa73ca5f0ae7ce1ba3b18de3dffe059bcd530562fbd975a54b82dc1_thumb.png", "https://pm1.narvii.com/6872/10d1cafbd98699d21f987e56ee316e95b708bdf2r1-1000-1427v2_uhq.jpg", "https://cdn.discordapp.com/attachments/662390318703837234/780879320267751434/fd6e577311c306485a2791623ff20d3c.png", "https://cdn.discordapp.com/attachments/662390318703837234/780878494468276255/South.png", "https://cdn.discordapp.com/attachments/662390318703837234/780878064569548850/5bb41ab9844ad3e6932cf81dd39d414f_7c6b7ced4ea068ba5b8b3226c508af58.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877841729847306/f2tq37capn421.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877671776256061/dkKtV5d.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877407502204958/Saber.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877244326871060/tumblr_oy4x0wDFrq1smzgcuo1_400.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877114542260264/latest.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877021630300160/original.png", "https://cdn.discordapp.com/attachments/662390318703837234/780876257570979840/239835.png", "https://cdn.discordapp.com/attachments/662390318703837234/780876111441559552/6a705cdefb63285ff29869d72919a6c2.png", "https://cdn.discordapp.com/attachments/774463189181267970/796894840582701107/image0.jpg", "https://cdn.discordapp.com/attachments/774463189181267970/796894840805654575/image1.jpg", "https://cdn.discordapp.com/attachments/774463189181267970/796894841144475698/image2.jpg", "https://cdn.discordapp.com/attachments/774463189181267970/796894841434931220/image3.jpg", "https://cdn.discordapp.com/attachments/796792011654955048/796792028801138769/54ccb70cf3f3ca5482a5bd8fa0ca196a.jpg", "https://cdn.discordapp.com/attachments/796792011654955048/796792050707857488/9516ab8ffd06d1f18dc641239734790d887a0533r1-640-360v2_uhq.jpg", "https://cdn.discordapp.com/attachments/796792011654955048/796793520048439386/nodoka2.jpg", "https://cdn.discordapp.com/attachments/796792011654955048/797153662585143387/tumblr_mzitcqigKO1r6eyjlo1_1280.png", "https://cdn.discordapp.com/attachments/796792011654955048/797154489466748958/Gasai_yuno_render_by_annaeditions24-d6ruhy7.png", "https://cdn.discordapp.com/attachments/796792011654955048/797155900178563112/803657-moe_12981_sample.jpg", ""]
+	goatEmbed  = discord.Embed(title="**__WAIFU__** :woman:", color = random.choice(color))
 	goatEmbed.set_image(url=random.choice(waif))
 	await ctx.send(embed = goatEmbed)
 @client.command()
@@ -544,7 +620,7 @@ async def bot_settings(ctx):
 
 @client.command()
 async def games(ctx):
-	await ctx.send(embed=discord.Embed(title = "__** :game_die: Fun :8ball: Games :coin: **__", description = f"\n> ```{prefix[1]}8ball <Your question>```\n> ```{prefix[1]}roll <max number>```\n> ```{prefix[1]}flip```\n> ```{prefix[1]}rps <weapon (rock, paper, or scissor)>```", color = random.choice(color)))
+	await ctx.send(embed=discord.Embed(title = "__** :game_die: Fun :8ball: Games :coin: **__", description = f"\n> ```{prefix[1]}8ball <Your question>```\n> ```{prefix[1]}roll <max number>```\n> ```{prefix[1]}flip```\n> ```{prefix[1]}rps <weapon (rock, paper, or scissors)>```", color = random.choice(color)))
 
 @client.command()
 async def chat(ctx):
@@ -562,7 +638,7 @@ async def admin_commands(ctx):
 		await ctx.send(embed=discord.Embed(title = "__**Administrator Commands**__", description = f"\n> ```{prefix[1]}greeting <message>```\n> ```{prefix[1]}```\n> ```{prefix[1]}farewell <message>```\n> ```{prefix[1]}kick <member ping> <reason>```", color = random.choice(color)))
 @client.command()
 async def help(ctx):
-	menu = f"__**Table of Contents of help menu**__\n> ```{prefix[1]}bot_settings```\n> ```{prefix[1]}games```\n> ```{prefix[1]}chat```\n> ```{prefix[1]}time_commands```\n> ```{prefix[1]}descision ```\n> ```{prefix[1]}stats```"
+	menu = f"__**Table of Contents of help menu**__\n> ```{prefix[1]}bot_settings```\n> ```{prefix[1]}games```\n> ```{prefix[1]}chat```\n> ```{prefix[1]}time_commands```\n> ```{prefix[1]}decision ```\n> ```{prefix[1]}stats```"
 
 
 	
@@ -620,7 +696,7 @@ async def delete_prefix(ctx, pref):
 @client.command()
 async def ball(ctx, *place):
 	lowerPlace = [each_string.lower() for each_string in place]
-	print(lowerPlace)
+
 	jo = " ".join(place)
 	
 	
@@ -733,15 +809,99 @@ async def bye(ctx):
 
 @client.command()
 
-async def rps(ctx, weapon):
+async def rps(ctx, member:discord.Member=""):
+	choices = ['rock', 'paper', 'scissors']
+	if not member == "":
+		await ctx.send(embed=discord.Embed(title="Rock, paper, scissors", description=f"Hello, {member.mention}.\n {ctx.author.mention} challenges you to a rock paper scissors battle\n you have about 15 second to reply to this text to accept the challenge"))
+		def is_correct(m):
+			return m.author.id != 770371351579852880 
+		try:
+			guess = await client.wait_for('message', check=is_correct, timeout=15)
+		except:
+			await ctx.send(embed=discord.Embed(title="Rock, paper, scissors", description=f"I guess you do not accept the challenge that {ctx.author.mention} gave you"))
+			return
+		i = 0
+		while guess.author.id != member.id and i < 5:
+			i+=1
+			guess = await client.wait_for('message', check=is_correct, timeout=15)
+		if i >= 5:
+			await ctx.send(embed=discord.Embed(title="Rock, paper, scissors", description=f"I guess you do not accept the challenge that {ctx.author.mention} gave you"))
+			return
+			
+		
+		await member.send(embed=discord.Embed(title="Rock, paper, scissors", description="What is your weapon:\nrock :rock:\npaper :newspaper:\nscissors :scissors:"))
+		gues = ""
+		def is_correct(m):
+			
+			
+			return m.author.id != 770371351579852880 and m.author.id == member.id and m.channel.id == member.dm_channel.id
+		
+		
+		gues = await client.wait_for('message', check=is_correct, timeout=100)
+		while gues=="":
+
+			gues = await client.wait_for('message', check=is_correct, timeout=100)
+		
+			
+		
+		
+
+		while not gues.content.lower() in choices:
+			
+			await member.send(embed=discord.Embed(title="Rock, paper, scissors", description="That is not a valid weapon\nWhat is your weapon:\nrock :rock:\npaper :newspaper:\nscissors :scissors:"))
+			guess = await client.wait_for('message', check=is_correct, timeout=10)
+		
+		away = gues.content
+		await ctx.send(embed = discord.Embed(title = "Rock Paper Scissors", description = f"{member.mention} chose his weapon"))
+		
+		try:
+			await ctx.author.send(embed=discord.Embed(title="Rock, paper, scissors", description="What is your weapon:\nrock :rock:\npaper :newspaper:\nscissors :scissors:"))
+			def is_corrects(m):
+				try:
+					return m.author.id != 770371351579852880 and m.author.id ==ctx.author.id and m.channel.id == ctx.author.dm_channel.id
+				except:
+
+					pass
+			guess = await client.wait_for('message', check=is_corrects, timeout=10)
+		except:
+			
+			await ctx.author.send(await ctx.send(embed=discord.Embed(title="Rock, paper, scissors", description=f"{member.mention} Could you please turn on permissions that can let the bot dm you, so that we could keep your choices private? ")))
+		while not guess.content.lower() in choices:
+			await ctx.author.send(embed=discord.Embed(title="Rock, paper, scissors", description="That is not valid weapon\nWhat is your weapon:\nrock :rock:\npaper :newspaper:\nscissors :scissors:"))
+			
+			guess = await client.wait_for('message', check=is_correct, timeout=100000000) 
+
+		rockEmbed = discord.Embed()
+		home = guess.content
+
+		if away == home:
+			rockEmbed.title = 'It is a tie'
+			rockEmbed.description = f"{ctx.author.mention} - {member.mention}\n**{home} - {away}**"
+		elif (away.lower() == "rock" and home.lower() =="paper") or (away.lower() == "paper" and home.lower() =="scissors") or (away.lower() == "paper" and home.lower() =="rock"):
+			rockEmbed.set_author(name=f'{member.name} won', icon_url = member.avatar_url)
+			rockEmbed.description = f"{ctx.author.mention} - {member.mention}\n**{home} - {away}**"
+		elif (home.lower() == "rock" and away.lower() =="paper") or (home.lower() == "paper" and away.lower() =="scissors") or (home.lower() == "paper" and away.lower() =="rock"):
+			rockEmbed.set_author(name=f'{ctx.author.name} won', icon_url = ctx.author.avatar_url)
+			rockEmbed.description = f"{ctx.author.mention} - {member.mention}\n**{home} - {away}**"
+			
+		await ctx.send(embed=rockEmbed)
+		return
+	
+
 	win = 0
 	loss = 0
-	choices = ['rock', 'paper', 'scissor']
+	
+	await ctx.send(embed=discord.Embed(title="Rock, paper, scissors", description="What is your weapon:\nrock :rock:\npaper :newspaper:\nscissors :scissors:"))
+	def is_correct(m):
+		return m.author.id != 770371351579852880 and m.author.id == ctx.author.id
+	guess = await client.wait_for('message', check=is_correct, timeout=100000000)
+	weapon = guess.content
+	
 	if not weapon in choices:
-		gamesEmbed = discord.Embed(title = f"***{prefix[1]}battle <weapon> <games>***", description = "__**The weapon has to be either rock, paper, or scissor.**__")
+		gamesEmbed = discord.Embed(title = f"***{prefix[1]}battle <weapon> <games>***", description = "__**The weapon has to be either rock, paper, or scissors.**__")
 		gamesEmbed.color = random.choice(color)
 		await ctx.send(embed=gamesEmbed)
-
+		return
 	
 	
 
@@ -753,15 +913,15 @@ async def rps(ctx, weapon):
 			if opponent.lower() == 'rock':
 				rockEmbed.title = 'It is a tie'
 				rockEmbed.description = f"**{weapon} - {opponent}**"
-			elif opponent.lower() == 'scissor':
+			elif opponent.lower() == 'scissors':
 				rockEmbed.title = 'You Win!'
 				rockEmbed.description = f"**{weapon} - {opponent}**"
 				
 			else:
 				rockEmbed.title = 'You Lost!'
 				rockEmbed.description = f"**{weapon} - {opponent}**"
-		elif weapon.lower() == 'scissor':
-			if opponent.lower() == 'scissor':
+		elif weapon.lower() == 'scissors':
+			if opponent.lower() == 'scissors':
 				rockEmbed.title = 'It is a tie!'
 				rockEmbed.description = f"**{weapon} - {opponent}**"
 			elif opponent.lower() == 'paper' :
@@ -821,7 +981,7 @@ async def timer(ctx, hours:int, minutes:int, second:int):
 		tim = second + minutes * 60 + hours *3600
 		timeCreator = ctx.author
 		
-	print(timeCreator.nick)
+
 	await ctx.send(embed=discord.Embed(title = "**__Timer__** :timer:", color = random.choice(color), description = f"{timeCreator.mention} set a timer for {hours} hours, {minutes} minutes, and {second} seconds"))
 	await asyncio.sleep(tim)
 	await ctx.send(embed=discord.Embed(title = "**__Timer__** :timer:", color = random.choice(color), description = f"{timeCreator.mention}'s timer is done"))
@@ -897,9 +1057,9 @@ async def alarm(ctx, finishTime, timeOfDay, *message ):
 	finishTimeInSeconds = hour*60*60 + minutes*60 - time.time()
 	await ctx.send(embed = discord.Embed(title = "Alarm :alarm_clock:", description = f"{ctx.author.mention}'s alarm is set to {finishTime} {timeOfDay}\n {rolex[ctx.author]}", color = random.choice(color)))
 	
-	print(finishTimeInSeconds)
-	print(hour*60*60 + minutes*60)
-	print(time.time())
+
+
+
 	await asyncio.sleep(finishTimeInSeconds)
 	try:
 		await ctx.send(title = "Alarm :alarm_clock:", description = f"{ctx.author.mention} \n**__{rolex[ctx.author.mention]}", color = random.choice(color))
@@ -925,7 +1085,7 @@ async def choose(ctx, *messages):
 	SplittedList = stringMessages.split(",")
 
 	for i in range(len(SplittedList)):
-		print(SplittedList[i])
+
 		if "or" in SplittedList[i]:
 			orList = SplittedList[i].split("or")
 			
