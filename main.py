@@ -352,9 +352,10 @@ async def on_message(message):
 					return
 				before = servers[message.author.guild.id][message.author]
 				if repeatNum < 5:
-					
+					before = servers[message.author.guild.id][message.author]//500
 					servers[message.author.guild.id][message.author] += exp
-					after = before = servers[message.author.guild.id][message.author]//500
+					after = servers[message.author.guild.id][message.author]//500
+
 					if after > before:
 						await message.channel.send(embed=discord.Embed(title=":arrow_up: **__Level Up__** :arrow_up:", description = f":partying_face: {message.author.mention} is now level {int(servers[message.author.guild.id][message.author] / 500)} :partying_face:", color = random.choice(color)))
 				repeat = message.author
@@ -813,7 +814,7 @@ rpstandings = {}
 async def rps(ctx, member:discord.Member=""):
 	choices = ['rock', 'paper', 'scissors']
 	if not member == "":
-		if member.id == ctx.author.id:
+		if member.name == ctx.author.name:
 			await ctx.send(embed=discord.Embed(title="Rock, Paper, Scissors", description=f"https://tenor.com/view/idiot-congratulations-you-played-your-self-gif-10536951"))
 			
 			return
@@ -821,9 +822,10 @@ async def rps(ctx, member:discord.Member=""):
 			rpstandings[ctx.author.guild.id] = {}
 			
 			
-		if not member.id in rpstandings[ctx.author.guild.id]:
+		if not member.name in rpstandings[ctx.author.guild.id]:
 			rpstandings[ctx.author.guild.id][member.name] = [0, 0]
-		if not ctx.author.id in rpstandings[ctx.author.guild.id]:
+			
+		if not ctx.author.name in rpstandings[ctx.author.guild.id]:
 			rpstandings[ctx.author.guild.id][ctx.author.name] = [0, 0]
 
 		await ctx.send(embed=discord.Embed(title="Rock, paper, scissors", description=f"Hello, {member.mention}.\n {ctx.author.mention} challenges you to a rock paper scissors battle\n you have about 15 second to reply to this text to accept the challenge"))
@@ -893,12 +895,12 @@ async def rps(ctx, member:discord.Member=""):
 		if away.lower() == home.lower():
 			rockEmbed.title = 'It is a tie'
 			rockEmbed.description = f"{ctx.author.mention} - {member.mention}\n**{home} - {away}**"
-		elif (away.lower() == "scissors" and home.lower() =="rock") or (away.lower() == "paper" and home.lower() =="scissors") or (away.lower() == "paper" and home.lower() =="rock"):
+		elif (away.lower() == "scissors" and home.lower() =="rock") or (away.lower() == "paper" and home.lower() =="scissors") or (away.lower() == "rock" and home.lower() =="paper"):
 			rockEmbed.set_author(name=f'{ctx.author.name} won', icon_url = ctx.author.avatar_url)
 			rockEmbed.description = f"{ctx.author.mention} - {member.mention}\n**{home} - {away}**"
 			rpstandings[ctx.author.guild.id][ctx.author.name][0] += 1
 			rpstandings[ctx.author.guild.id][member.name][1] += 1
-		elif (home.lower() == "scissors" and away.lower() =="rock") or (home.lower() == "paper" and away.lower() =="scissors") or (home.lower() == "paper" and away.lower() =="rock"):
+		elif (home.lower() == "scissors" and away.lower() =="rock") or (home.lower() == "paper" and away.lower() =="scissors") or (home.lower() == "rock" and away.lower() =="paper"):
 			rockEmbed.set_author(name=f'{member.name} won', icon_url = member.avatar_url)
 			rockEmbed.description = f"{ctx.author.mention} - {member.mention}\n**{home} - {away}**"
 			rpstandings[ctx.author.guild.id][ctx.author.name][1] += 1
@@ -969,7 +971,7 @@ async def rps(ctx, member:discord.Member=""):
 @client.command()
 async def rps_standings(ctx):
 	if not ctx.author.guild.id in rpstandings:
-		ctx.send(embed=discord.Embed(title = "Rock Paper Scissors Standings", description = "Your server has not played rock paper scissors before"))
+		await ctx.send(embed=discord.Embed(title = "Rock Paper Scissors Standings", description = "Your server has not played rock paper scissors before"))
 		return
 	rps_pct = {}
 	for i in rpstandings[ctx.author.guild.id]:
