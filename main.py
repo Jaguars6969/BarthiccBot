@@ -293,7 +293,11 @@ async def love(ctx, *message):
 repeatNum = 0
 @client.event
 async def on_message(message):
-	
+
+	pop = message.content.lower().split()
+	if "am" in pop or "are" in pop or "is" in pop:
+		if random.randint(0, 3) == 0:
+			await message.add_reaction("🧢")
 	try:
 		woo = message.author.guild.id
 		woo = message.author.dm_channel.id
@@ -316,11 +320,9 @@ async def on_message(message):
 	for i in messageSplit:
 		if "http" in i or ".com" in i or i.count(":") > 1 or "U0" in i or "!standings" in i:
 			messageSplit.remove(i)
-	pop = "".join(messageSplit)
-	exp = len(pop)
-	if "am" in pop or "are" in pop or "is" in pop:
-		if random.randint(0, 3) == 0:
-			await message.add_reaction("🧢")
+	
+	exp = len( "".join(messageSplit))
+
 	global repeatNum
 	global repeat
 	try:
@@ -610,7 +612,7 @@ async def cat(ctx):
 
 @client.command(aliases = [])
 async def waifu(ctx):
-	waif = ["https://qph.fs.quoracdn.net/main-qimg-1b2b48639a0af3f11c3964947ca99eb6", "https://thicc.mywaifulist.moe/waifus/2644/9990491ab8ff677202a435f64bbf37a5438780e14650244062c9356faea63be4_thumb.jpeg", "https://pbs.twimg.com/media/EfoABDaXgAA_WJg.jpg", "https://thicc.mywaifulist.moe/waifus/1192/89db9db0a26f5a3ea6cf6a077fc17c8d0f3ae979b92f068cb04a07ca2b221d0c_thumb.jpeg", "https://i.pinimg.com/originals/ee/59/5c/ee595c95b669d88b9c3c841dd5d02554.jpg", "https://thicc.mywaifulist.moe/waifus/344/56b6683a1aa73ca5f0ae7ce1ba3b18de3dffe059bcd530562fbd975a54b82dc1_thumb.png", "https://pm1.narvii.com/6872/10d1cafbd98699d21f987e56ee316e95b708bdf2r1-1000-1427v2_uhq.jpg", "https://cdn.discordapp.com/attachments/662390318703837234/780879320267751434/fd6e577311c306485a2791623ff20d3c.png", "https://cdn.discordapp.com/attachments/662390318703837234/780878494468276255/South.png", "https://cdn.discordapp.com/attachments/662390318703837234/780878064569548850/5bb41ab9844ad3e6932cf81dd39d414f_7c6b7ced4ea068ba5b8b3226c508af58.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877841729847306/f2tq37capn421.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877671776256061/dkKtV5d.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877407502204958/Saber.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877244326871060/tumblr_oy4x0wDFrq1smzgcuo1_400.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877114542260264/latest.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877021630300160/original.png", "https://cdn.discordapp.com/attachments/662390318703837234/780876257570979840/239835.png", "https://cdn.discordapp.com/attachments/662390318703837234/780876111441559552/6a705cdefb63285ff29869d72919a6c2.png", "https://cdn.discordapp.com/attachments/774463189181267970/796894840582701107/image0.jpg", "https://cdn.discordapp.com/attachments/774463189181267970/796894840805654575/image1.jpg", "https://cdn.discordapp.com/attachments/774463189181267970/796894841144475698/image2.jpg", "https://cdn.discordapp.com/attachments/774463189181267970/796894841434931220/image3.jpg", "https://cdn.discordapp.com/attachments/796792011654955048/796792028801138769/54ccb70cf3f3ca5482a5bd8fa0ca196a.jpg", "https://cdn.discordapp.com/attachments/796792011654955048/796792050707857488/9516ab8ffd06d1f18dc641239734790d887a0533r1-640-360v2_uhq.jpg", "https://cdn.discordapp.com/attachments/796792011654955048/796793520048439386/nodoka2.jpg", "https://cdn.discordapp.com/attachments/796792011654955048/797153662585143387/tumblr_mzitcqigKO1r6eyjlo1_1280.png", "https://cdn.discordapp.com/attachments/796792011654955048/797154489466748958/Gasai_yuno_render_by_annaeditions24-d6ruhy7.png", "https://cdn.discordapp.com/attachments/796792011654955048/797155900178563112/803657-moe_12981_sample.jpg"]
+	waif = ["https://qph.fs.quoracdn.net/main-qimg-1b2b48639a0af3f11c3964947ca99eb6", "https://thicc.mywaifulist.moe/waifus/2644/9990491ab8ff677202a435f64bbf37a5438780e14650244062c9356faea63be4_thumb.jpeg", "https://pbs.twimg.com/media/EfoABDaXgAA_WJg.jpg", "https://thicc.mywaifulist.moe/waifus/1192/89db9db0a26f5a3ea6cf6a077fc17c8d0f3ae979b92f068cb04a07ca2b221d0c_thumb.jpeg", "https://i.pinimg.com/originals/ee/59/5c/ee595c95b669d88b9c3c841dd5d02554.jpg", "https://thicc.mywaifulist.moe/waifus/344/56b6683a1aa73ca5f0ae7ce1ba3b18de3dffe059bcd530562fbd975a54b82dc1_thumb.png", "https://pm1.narvii.com/6872/10d1cafbd98699d21f987e56ee316e95b708bdf2r1-1000-1427v2_uhq.jpg", "https://cdn.discordapp.com/attachments/662390318703837234/780879320267751434/fd6e577311c306485a2791623ff20d3c.png", "https://cdn.discordapp.com/attachments/662390318703837234/780878494468276255/South.png", "https://cdn.discordapp.com/attachments/662390318703837234/780878064569548850/5bb41ab9844ad3e6932cf81dd39d414f_7c6b7ced4ea068ba5b8b3226c508af58.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877841729847306/f2tq37capn421.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877671776256061/dkKtV5d.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877407502204958/Saber.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877244326871060/tumblr_oy4x0wDFrq1smzgcuo1_400.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877114542260264/latest.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877021630300160/original.png", "https://cdn.discordapp.com/attachments/662390318703837234/780876257570979840/239835.png", "https://cdn.discordapp.com/attachments/662390318703837234/780876111441559552/6a705cdefb63285ff29869d72919a6c2.png", "https://cdn.discordapp.com/attachments/774463189181267970/796894840582701107/image0.jpg", "https://cdn.discordapp.com/attachments/774463189181267970/796894840805654575/image1.jpg", "https://cdn.discordapp.com/attachments/774463189181267970/796894841144475698/image2.jpg", "https://cdn.discordapp.com/attachments/774463189181267970/796894841434931220/image3.jpg", "https://cdn.discordapp.com/attachments/796792011654955048/796792028801138769/54ccb70cf3f3ca5482a5bd8fa0ca196a.jpg", "https://cdn.discordapp.com/attachments/796792011654955048/796792050707857488/9516ab8ffd06d1f18dc641239734790d887a0533r1-640-360v2_uhq.jpg", "https://cdn.discordapp.com/attachments/796792011654955048/796793520048439386/nodoka2.jpg", "https://cdn.discordapp.com/attachments/796792011654955048/797153662585143387/tumblr_mzitcqigKO1r6eyjlo1_1280.png", "https://cdn.discordapp.com/attachments/796792011654955048/797154489466748958/Gasai_yuno_render_by_annaeditions24-d6ruhy7.png", "https://cdn.discordapp.com/attachments/796792011654955048/797155900178563112/803657-moe_12981_sample.jpg", "https://i.pinimg.com/736x/e1/7d/51/e17d519f087135925d9036ac9d12b857.jpg", "https://img.wattpad.com/8e9411e013bbfe7aff3794215a86985e16e01ada/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f776174747061642d6d656469612d736572766963652f53746f7279496d6167652f36626239686f6e347259533233673d3d2d3731333537393934302e313539313035613734656633306266663231303438313630373539312e706e67?s=fit&w=720&h=720", "https://i.ytimg.com/vi/_NkxM_uLUpw/maxresdefault.jpg", "https://cdn.discordapp.com/attachments/796792011654955048/798212352638058516/download_1.jpg", "https://i.pinimg.com/originals/93/dd/3a/93dd3a329974c21d4b1db888d481f330.png", "https://i.pinimg.com/originals/c9/37/c2/c937c2434c5f4a50f385b630fed837c3.png", "https://static.wikia.nocookie.net/kimetsu-no-yaiba/images/a/ad/Mitsuri_colored_body.png/revision/latest?cb=20191116164005", "https://cdn.discordapp.com/attachments/796792011654955048/798320124590555176/maxresdefault_2.jpg"]
 	goatEmbed  = discord.Embed(title="**__WAIFU__** :woman:", color = random.choice(color))
 	goatEmbed.set_image(url=random.choice(waif))
 	await ctx.send(embed = goatEmbed)
@@ -629,6 +631,7 @@ async def chat(ctx):
 @client.command()
 async def time_commands(ctx):
 	await ctx.send(embed=discord.Embed(title = "__**time :clock:**__", description = "\n>  ```{prefix[1]}timer <hours> <minutes> <second>```\n>  ```{prefix[1]}stopwatch```\n>  ```{prefix[1]}stop_stopwatch```\n>  ```{prefix[1]}alarm <finish time> <AM or PM> <notes>```\n>  ```{prefix[1]}stop_alarm```", color = random.choice(color)))
+	
 
 @client.command()
 async def admin_commands(ctx):
@@ -803,18 +806,29 @@ async def bye(ctx):
 	await ctx.send(embed = helloEmbed)
 
 
-
-
-
+rpstandings = {}
 
 @client.command()
 
 async def rps(ctx, member:discord.Member=""):
 	choices = ['rock', 'paper', 'scissors']
 	if not member == "":
+		if member.id == ctx.author.id:
+			await ctx.send(embed=discord.Embed(title="Rock, Paper, Scissors", description=f"https://tenor.com/view/idiot-congratulations-you-played-your-self-gif-10536951"))
+			
+			return
+		if not ctx.author.guild.id in rpstandings:
+			rpstandings[ctx.author.guild.id] = {}
+			
+			
+		if not member.id in rpstandings[ctx.author.guild.id]:
+			rpstandings[ctx.author.guild.id][member.name] = [0, 0]
+		if not ctx.author.id in rpstandings[ctx.author.guild.id]:
+			rpstandings[ctx.author.guild.id][ctx.author.name] = [0, 0]
+
 		await ctx.send(embed=discord.Embed(title="Rock, paper, scissors", description=f"Hello, {member.mention}.\n {ctx.author.mention} challenges you to a rock paper scissors battle\n you have about 15 second to reply to this text to accept the challenge"))
 		def is_correct(m):
-			return m.author.id != 770371351579852880 
+			return m.author.id != 770371351579852880 and m.channel.id == ctx.message.channel.id
 		try:
 			guess = await client.wait_for('message', check=is_correct, timeout=15)
 		except:
@@ -849,12 +863,13 @@ async def rps(ctx, member:discord.Member=""):
 		while not gues.content.lower() in choices:
 			
 			await member.send(embed=discord.Embed(title="Rock, paper, scissors", description="That is not a valid weapon\nWhat is your weapon:\nrock :rock:\npaper :newspaper:\nscissors :scissors:"))
-			guess = await client.wait_for('message', check=is_correct, timeout=10)
+			gues = await client.wait_for('message', check=is_correct, timeout=1000000)
 		
 		away = gues.content
 		await ctx.send(embed = discord.Embed(title = "Rock Paper Scissors", description = f"{member.mention} chose his weapon"))
 		
 		try:
+
 			await ctx.author.send(embed=discord.Embed(title="Rock, paper, scissors", description="What is your weapon:\nrock :rock:\npaper :newspaper:\nscissors :scissors:"))
 			def is_corrects(m):
 				try:
@@ -862,10 +877,11 @@ async def rps(ctx, member:discord.Member=""):
 				except:
 
 					pass
-			guess = await client.wait_for('message', check=is_corrects, timeout=10)
+			
+			guess = await client.wait_for('message', check=is_corrects, timeout=10000000)
 		except:
 			
-			await ctx.author.send(await ctx.send(embed=discord.Embed(title="Rock, paper, scissors", description=f"{member.mention} Could you please turn on permissions that can let the bot dm you, so that we could keep your choices private? ")))
+			await ctx.author.send(embed=discord.Embed(title="Rock, paper, scissors", description=f"{member.mention} Could you please turn on permissions that can let the bot dm you, so that we could keep your choices private? "))
 		while not guess.content.lower() in choices:
 			await ctx.author.send(embed=discord.Embed(title="Rock, paper, scissors", description="That is not valid weapon\nWhat is your weapon:\nrock :rock:\npaper :newspaper:\nscissors :scissors:"))
 			
@@ -873,20 +889,24 @@ async def rps(ctx, member:discord.Member=""):
 
 		rockEmbed = discord.Embed()
 		home = guess.content
-
-		if away == home:
+		
+		if away.lower() == home.lower():
 			rockEmbed.title = 'It is a tie'
 			rockEmbed.description = f"{ctx.author.mention} - {member.mention}\n**{home} - {away}**"
-		elif (away.lower() == "rock" and home.lower() =="paper") or (away.lower() == "paper" and home.lower() =="scissors") or (away.lower() == "paper" and home.lower() =="rock"):
-			rockEmbed.set_author(name=f'{member.name} won', icon_url = member.avatar_url)
-			rockEmbed.description = f"{ctx.author.mention} - {member.mention}\n**{home} - {away}**"
-		elif (home.lower() == "rock" and away.lower() =="paper") or (home.lower() == "paper" and away.lower() =="scissors") or (home.lower() == "paper" and away.lower() =="rock"):
+		elif (away.lower() == "scissors" and home.lower() =="rock") or (away.lower() == "paper" and home.lower() =="scissors") or (away.lower() == "paper" and home.lower() =="rock"):
 			rockEmbed.set_author(name=f'{ctx.author.name} won', icon_url = ctx.author.avatar_url)
 			rockEmbed.description = f"{ctx.author.mention} - {member.mention}\n**{home} - {away}**"
-			
+			rpstandings[ctx.author.guild.id][ctx.author.name][0] += 1
+			rpstandings[ctx.author.guild.id][member.name][1] += 1
+		elif (home.lower() == "scissors" and away.lower() =="rock") or (home.lower() == "paper" and away.lower() =="scissors") or (home.lower() == "paper" and away.lower() =="rock"):
+			rockEmbed.set_author(name=f'{member.name} won', icon_url = member.avatar_url)
+			rockEmbed.description = f"{ctx.author.mention} - {member.mention}\n**{home} - {away}**"
+			rpstandings[ctx.author.guild.id][ctx.author.name][1] += 1
+			rpstandings[ctx.author.guild.id][member.name][0] += 1
+		
 		await ctx.send(embed=rockEmbed)
 		return
-	
+
 
 	win = 0
 	loss = 0
@@ -946,8 +966,45 @@ async def rps(ctx, member:discord.Member=""):
 				rockEmbed.description = f"**{weapon} - {opponent}**"
 		await ctx.send(embed=rockEmbed)
 
-
+@client.command()
+async def rps_standings(ctx):
+	if not ctx.author.guild.id in rpstandings:
+		ctx.send(embed=discord.Embed(title = "Rock Paper Scissors Standings", description = "Your server has not played rock paper scissors before"))
+		return
+	rps_pct = {}
+	for i in rpstandings[ctx.author.guild.id]:
 		
+		win = rpstandings[ctx.author.guild.id][i][0]
+		loss = rpstandings[ctx.author.guild.id][i][1]
+		win_percentage = round((win/(win+loss))*100, 3)
+		rps_pct[i] = win_percentage
+
+	standingsText = "> **NAME - WIN - LOSS - WIN %**\n\n"
+	standings = sorted(rps_pct.items(), key = lambda x : x[1], reverse = True)
+	
+	woo = 0 
+	try:
+		for i in range(10):
+			
+			if i == 0:
+				rank = ":first_place:"
+			elif i == 1:
+				rank = ":second_place:"
+			elif i == 2:
+				rank = ":third_place:"
+			else:
+				rank = f"``{i+1}.``"
+			if standings[i][0] == "BarthiccBot":
+				woo+=1
+			standingsText += f">  {rank}  **{standings[i+woo][0]} - ``{rpstandings[ctx.author.guild.id][standings[i+woo][0]][0]}`` - ``{rpstandings[ctx.author.guild.id][standings[i+woo][0]][1]}`` - ``{standings[i+woo][1]}``**\n\n"
+	except:
+		pass
+	
+	
+
+	await ctx.send(embed=discord.Embed(title = f"Standings :trophy: For :trophy: {ctx.message.author.guild.name}", description = f"{standingsText}", color = random.choice(color)))
+
+
 
 		
 @client.command()
