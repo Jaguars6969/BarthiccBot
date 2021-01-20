@@ -52,11 +52,7 @@ antiSpam = []
 mutes = {}
 
 
-@client.command()
-async def blackjack(ctx):
-	cards = [1, 2, 3, 4, 5, 6, 7, 8, 9,10, 'K', 'Q', 'J' ]
-	suites = [":hearts:", ":spades:", ":clovers:", ":diamonds:"]
-	ctx.send(embed=discord.Embed(title=":hearts: :diamonds:blackjack:spades: :clovers:", description=""))
+
 
 @client.command()
 async def mute(ctx, member:discord.Member):
