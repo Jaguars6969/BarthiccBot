@@ -51,7 +51,323 @@ GreetingMessage = ""
 antiSpam = []
 mutes = {}
 
+blackjackStandings = {}
+@client.command()
+async def blackjack(ctx, member : discord.Member = ""):
+	if member != "":
+		await ctx.send(embed=discord.Embed(title=":hearts: :diamonds:blackjack:spades: :clubs:", description=f"Hello, {member.mention}.\n {ctx.author.mention} challenges you to a rock paper scissors battle\n you have about 15 second to reply to this text to accept the challenge"))
+		def is_correct(m):
+			return m.author.id != 770371351579852880 and m.channel.id == ctx.message.channel.id
+		try:
+			guess = await client.wait_for('message', check=is_correct, timeout=15)
+		except:
+			await ctx.send(embed=discord.Embed(title=":hearts: :diamonds:blackjack:spades: :clubs:", description=f"I guess you do not accept the challenge that {ctx.author.mention} gave you"))
+			return
+		i = 0
+		while guess.author.id != member.id and i < 5:
+			i+=1
+			guess = await client.wait_for('message', check=is_correct, timeout=15)
+		if i >= 5:
+			await ctx.send(embed=discord.Embed(title=":hearts: :diamonds:blackjack:spades: :clubs:", description=f"I guess you do not accept the challenge that {ctx.author.mention} gave you"))
+			return
+		
+	if not ctx.author.guild.id in blackjackStandings:
+		blackjackStandings[ctx.author.guild.id] = {"BarthiccBot":[0, 0]}
+	if not ctx.author.name in blackjackStandings[ctx.author.guild.id]:
+		blackjackStandings[ctx.author.guild.id][ctx.author.name] = [0, 0]	
+	if not member == "":
+		if member.name == ctx.author.name:
+			await ctx.send(embed=discord.Embed(title=":hearts: :diamonds:blackjack:spades: :clubs:", description=f"https://tenor.com/view/idiot-congratulations-you-played-your-self-gif-10536951"))
+			
+			return
+		
+			
+		if not member.name in blackjackStandings[ctx.author.guild.id]:
+			blackjackStandings[ctx.author.guild.id][member.name] = [0, 0]
+	home = blackjackStandings[ctx.author.guild.id][ctx.author.name]
+	if member == "":
+		away = blackjackStandings[ctx.author.guild.id]["BarthiccBot"]
+	else:
+		away = blackjackStandings[ctx.author.guild.id][member.name]
+	cards = ['A', 2, 3, 4, 5, 6, 7, 8, 9,10, 'K', 'Q', 'J' ]
+	suites = [":hearts:", ":spades:", ":clubs:", ":diamonds:"]
+	suitesDict = {"A":[], 2:[], 3:[],4:[],5:[],6:[],7:[], 8:[], 9:[], 10:[], "K":[], "Q":[], "J":[]}
 
+	cpu = []
+	player = []
+	cpuTotal = 0
+	cpuText = ""
+	playTotal = 0
+	playText = ""
+	playAce = 0
+	cancun = 0
+	skeletons = 0
+	cpuAce = 0
+	playce = 0
+	cpuace = 0
+	hidden = ""
+	for i in range(2):
+		randomCard = random.choice(cards)
+		randomSuite = random.choice(suites)
+		add = randomCard
+		while randomSuite in suitesDict[randomCard]:
+			randomSuite = random.choice(suites)
+		suitesDict[randomCard]
+		
+
+		player.append(randomCard)
+		if randomCard == "A":
+			
+			if playTotal + 11 < 21:
+				add = 11
+				cancun +=1
+			else:
+				
+				add = 1
+		if randomCard == "K" or randomCard == "Q" or randomCard == "J":
+			add = 10
+		playText += f"{randomCard} {randomSuite}\n"
+
+		playTotal += add
+
+		
+		if playAce < cancun and playTotal > 21:
+			playTotal -= 10
+		
+	
+
+		
+	for i in range(2):
+		randomCard = random.choice(cards)
+		randomSuite = random.choice(suites)
+		add = randomCard
+		while randomSuite in suitesDict[randomCard]:
+			randomSuite = random.choice(suites)
+		suitesDict[randomCard]
+		
+
+		cpu.append(randomCard)
+		if randomCard == "A":
+			if cpuTotal + 11 < 21:
+				add = 11
+				skeletons += 1
+			else:
+				
+				add = 1
+		if randomCard == "K" or randomCard == "Q" or randomCard == "J":
+			add = 10
+		
+		if i == 1:
+			hidden = f"{randomCard} {randomSuite}"
+			cpuText += ":flower_playing_cards:\n"
+		else:
+			cpuText += f"{randomCard} {randomSuite}\n"
+			belly = f"{randomCard} {randomSuite}\n"
+			cpuTotal += add
+
+
+
+
+
+
+	
+
+	
+	guess = ""
+	def is_correct(m):
+		return m.author.id == ctx.author.id 
+	
+	while True:
+		if member == "":
+			await ctx.send(embed=discord.Embed(title=":hearts: :diamonds:blackjack:spades: :clubs:", description=f"{ctx.author.name}'s Cards are:\n{playText}\nTotal: {playTotal}\n\nThe Dealers Cards are:\n{cpuText}\nTotal:{cpuTotal}\n\nType h to hit\nType s to stay"))
+		else:
+			await ctx.send(embed=discord.Embed(title=":hearts: :diamonds:blackjack:spades: :clubs:", description=f"**It is {ctx.author.name}'s turn**\n{ctx.author.name}'s Cards are:\n{playText}\nTotal: {playTotal}\n\n{member.name}'s Cards are:\n{cpuText}\nTotal:{cpuTotal}\n\nType h to hit\nType s to stay"))
+	
+		guess = await client.wait_for("message", check =is_correct)
+		woo = guess.content.lower()
+
+		while woo !="h" and woo != "s":
+			
+			guess = await client.wait_for("message", check =is_correct)
+			woo = guess.content.lower()
+		
+		if woo == "s":
+			
+			break
+		randomCard = random.choice(cards)
+		randomSuite = random.choice(suites)
+		add = randomCard
+		while randomSuite in suitesDict[randomCard]:
+			randomSuite = random.choice(suites)
+		suitesDict[randomCard]
+		if randomCard == "A":
+			if playTotal + 11 < 21:
+				add = 11
+				cancun += 1
+			else:
+				
+				add = 1
+
+		player.append(randomCard)
+		
+		if randomCard == "K" or randomCard == "Q" or randomCard == "J":
+			add = 10
+		woo = playText
+		playText += f"{randomCard} {randomSuite}\n"
+		
+		playTotal += add
+		if playAce < cancun and playTotal > 21:
+			playAce += 1
+			playTotal -= 10
+		if playTotal>=21:
+			
+			break
+	try:
+
+		cpuTotal += int(hidden[0])
+
+	except:
+	
+		if hidden[0] == "A":
+			if cpuTotal + 11 < 21:
+				add = 11
+				skeletons += 1
+			else:
+				add = 1
+		if hidden[0]== "K" or hidden[0] == "Q" or hidden[0] == "J":
+			add = 10
+		
+		cpuTotal += add
+
+	cpu.pop()
+	cpu.append(hidden[0])
+
+	cpuText = belly + hidden + "\n"	
+
+	while True:
+		if cpuTotal >=21:
+			break
+		elif cpuTotal >= playTotal and cpuTotal < 21:
+			break
+		elif playTotal > 21:
+			break
+		if member != "":
+			await ctx.send(embed=discord.Embed(title=":hearts: :diamonds:blackjack:spades: :clubs:", description=f"**It is {member.name}'s turn**\n{ctx.author.name}'s Cards are:\n{playText}\nTotal: {playTotal}\n\nThe Dealers Cards are:\n{cpuText}\nTotal:{cpuTotal}\n\nType h to hit\nType s to stay"))
+			def is_corrects(m):
+				return m.author.id == member.id 
+			guess = await client.wait_for("message", check =is_corrects)
+			woo = guess.content.lower()
+
+			while woo !="h" and woo != "s":
+				
+				guess = await client.wait_for("message", check =is_corrects)
+				woo = guess.content.lower()
+			
+			if woo == "s":
+				
+				break
+
+		randomCard = random.choice(cards)
+		randomSuite = random.choice(suites)
+		add = randomCard
+		while randomSuite in suitesDict[randomCard]:
+
+			randomSuite = random.choice(suites)
+		suitesDict[randomCard]
+		
+
+		player.append(randomCard)
+		if randomCard == "A":
+			if cpuTotal + 11 < 21:
+				skeletons +=1
+				add = 11
+			else:
+				
+				add = 1
+		if randomCard == "K" or randomCard == "Q" or randomCard == "J":
+			add = 10
+		
+		
+		cpuText += f"{randomCard} {randomSuite}\n"
+		cpuTotal += add
+		if cpuAce < skeletons and cpuTotal > 21:
+			cpuAce += 1
+			cpuTotal -= 10
+
+
+
+	if playTotal == cpuTotal:
+		if member == "":
+			stateEmbed = discord.Embed(title = "You both tied!",description = f"Your Cards are:\n{playText}\nTotal: {playTotal}\n\nThe Dealer's Cards are:\n{cpuText}\nTotal:{cpuTotal}\n", color =random.choice(color))
+		else:
+			stateEmbed = discord.Embed(title = "You both tied!",description = f"Your Cards are:\n{playText}\nTotal: {playTotal}\n\n{member.name}'s Cards are:\n{cpuText}\nTotal:{cpuTotal}\n", color =random.choice(color))
+		
+		await ctx.send(embed=stateEmbed)
+		return
+	if playTotal == 21 or cpuTotal > 21 or (playTotal > cpuTotal and playTotal < 21):
+		if member == "":
+			stateEmbed = discord.Embed(description = f"Your Cards are:\n{playText}\nTotal: {playTotal}\n\nThe Dealers Cards are:\n{cpuText}\nTotal:{cpuTotal}\n", color =random.choice(color))
+			stateEmbed.set_author(name=f'{ctx.author.name} Won the blackjack game', icon_url = ctx.author.avatar_url)
+			
+		else:
+			stateEmbed = discord.Embed(description = f"Your Cards are:\n{playText}\nTotal: {playTotal}\n\n{member.name}'s Cards are:\n{cpuText}\nTotal:{cpuTotal}\n", color =random.choice(color))
+			stateEmbed.set_author(name=f'{ctx.author.name} Won the blackjack game', icon_url = ctx.author.avatar_url)
+		await ctx.send(embed=stateEmbed)
+		home[0] += 1
+		away[1] +=1
+
+	if cpuTotal == 21 or playTotal > 21 or (cpuTotal > playTotal and cpuTotal < 21):
+		if member == "":
+			stateEmbed = discord.Embed(description = f"Your Cards are:\n{playText}\nTotal: {playTotal}\n\nThe Dealers Cards are:\n{cpuText}\nTotal:{cpuTotal}\n", color =random.choice(color))
+			stateEmbed.set_author(name=f'BarthiccBot Won the blackjack game', icon_url = "https://www.sohh.com/wp-content/uploads/2020/12/3b3baf71a0251cf5f7adce147c219ee5.jpg")
+		else:
+			stateEmbed = discord.Embed(description = f"Your Cards are:\n{playText}\nTotal: {playTotal}\n\n{member.name}'s Cards are:\n{cpuText}\nTotal:{cpuTotal}\n", color =random.choice(color))
+			stateEmbed.set_author(name=f'{member.name} Won the blackjack game', icon_url = member.avatar_url)
+		await ctx.send(embed=stateEmbed)
+		home[1] += 1
+		away[0] +=1
+@client.command()
+async def blackjack_standings(ctx):
+	
+	if not ctx.author.guild.id in blackjackStandings:
+		print(ctx.author.guild.id)
+		await ctx.send(embed=discord.Embed(title = ":hearts: :diamonds:blackjack:spades: :clubs:", description = "Your server has not played rock paper scissors before"))
+		return
+	blackjack_pct = {}
+	for i in blackjackStandings[ctx.author.guild.id]:
+		
+		win = blackjackStandings[ctx.author.guild.id][i][0]
+		loss = blackjackStandings[ctx.author.guild.id][i][1]
+		print(win, loss)
+		try:
+			win_percentage = round((win/(win+loss))*100, 3)
+			blackjack_pct[i] = win_percentage
+		except:
+			blackjack[i] = "-"
+		
+	standingsText = "> **NAME - WIN - LOSS - WIN %**\n\n"
+	standings = sorted(blackjack_pct.items(), key = lambda x : x[1], reverse = True)
+	
+	woo = 0 
+	try:
+		for i in range(10):
+			
+			if i == 0:
+				rank = ":first_place:"
+			elif i == 1:
+				rank = ":second_place:"
+			elif i == 2:
+				rank = ":third_place:"
+			else:
+				rank = f"``{i+1}.``"
+			
+			standingsText += f">  {rank}  **{standings[i+woo][0]} - ``{blackjackStandings[ctx.author.guild.id][standings[i+woo][0]][0]}`` - ``{blackjackStandings[ctx.author.guild.id][standings[i+woo][0]][1]}`` - ``{standings[i+woo][1]}``**\n\n"
+	except:
+		pass
+	
+	
+
+	await ctx.send(embed=discord.Embed(title = f"Standings :trophy: For :trophy: {ctx.message.author.guild.name}", description = f"{standingsText}", color = random.choice(color)))
 
 
 @client.command()
@@ -291,7 +607,7 @@ repeatNum = 0
 async def on_message(message):
 
 	pop = message.content.lower().split()
-	if "am" in pop or "are" in pop or "is" in pop:
+	if "am" in pop or "are" in pop or "is" in pop or "has"in pop or "have" in pop and not pop[1] in ["is", "where","who","what","why", "when"]:
 		if random.randint(0, 3) == 0:
 			await message.add_reaction("🧢")
 	try:
@@ -313,10 +629,17 @@ async def on_message(message):
 	except:
 		pass
 	messageSplit = message.content.split(" ")
+
 	for i in messageSplit:
-		if "http" in i or ".com" in i or i.count(":") > 1 or "U0" in i or "!standings" in i:
+		
+
+		if "http" in i or ".com" in i or i.count(":") > 0 or "U0" in i or "!standings" in i:
+
 			messageSplit.remove(i)
+		
 	
+
+
 	exp = len( "".join(messageSplit))
 
 	global repeatNum
@@ -801,7 +1124,35 @@ async def bye(ctx):
 	helloEmbed = discord.Embed(description = f"{ctx.author.mention} :wave:")
 	helloEmbed.color = random.choice(color)
 	await ctx.send(embed = helloEmbed)
+@client.command()
+async def waifu_stats(ctx, member:discord.Member=""):
+	if member == "":
+		wide = str(ctx.author.id)
+	else:
+		wide = str(member.id)
+	uzi = ""
+	
+	
+	category = ["Loving :heart:", "Personality :blue_heart:", "Attractiveness :orange_heart:", "Horny :green_heart:", "Loyalty :white_heart:", "Popularity :purple_heart:" ]
+	woo = []
+	avg = 0
+	for i in range(0, 12, 2):
+		
+		widNum = wide[int(i): int(i+2)]
+		random.seed(widNum)
+		rating = random.randint(0, 10)
+		woo.append(rating)
+		avg += rating
+	for i in range(len(woo)):
+		uzi+= f"{category[i]}: {woo[i]}/10\n"
 
+	uzi += f"Average Rating: {avg//6}/10"
+	stateEmbed = discord.Embed(description = uzi, color =random.choice(color))
+	stateEmbed.set_author(name=f'{ctx.author.name}\'s Waifu Stats', icon_url = ctx.author.avatar_url)
+	await ctx.send(embed=stateEmbed)
+
+		
+	
 
 rpstandings = {}
 
@@ -809,20 +1160,21 @@ rpstandings = {}
 
 async def rps(ctx, member:discord.Member=""):
 	choices = ['rock', 'paper', 'scissors']
+	if not ctx.author.guild.id in rpstandings:
+		rpstandings[ctx.author.guild.id] = {"BarthiccBot":[0, 0]}
+	if not ctx.author.name in rpstandings[ctx.author.guild.id]:
+		rpstandings[ctx.author.guild.id][ctx.author.name] = [0, 0]	
 	if not member == "":
 		if member.name == ctx.author.name:
 			await ctx.send(embed=discord.Embed(title="Rock, Paper, Scissors", description=f"https://tenor.com/view/idiot-congratulations-you-played-your-self-gif-10536951"))
 			
 			return
-		if not ctx.author.guild.id in rpstandings:
-			rpstandings[ctx.author.guild.id] = {}
-			
+		
 			
 		if not member.name in rpstandings[ctx.author.guild.id]:
 			rpstandings[ctx.author.guild.id][member.name] = [0, 0]
 			
-		if not ctx.author.name in rpstandings[ctx.author.guild.id]:
-			rpstandings[ctx.author.guild.id][ctx.author.name] = [0, 0]
+		
 
 		await ctx.send(embed=discord.Embed(title="Rock, paper, scissors", description=f"Hello, {member.mention}.\n {ctx.author.mention} challenges you to a rock paper scissors battle\n you have about 15 second to reply to this text to accept the challenge"))
 		def is_correct(m):
@@ -934,10 +1286,14 @@ async def rps(ctx, member:discord.Member=""):
 			elif opponent.lower() == 'scissors':
 				rockEmbed.title = 'You Win!'
 				rockEmbed.description = f"**{weapon} - {opponent}**"
+				rpstandings[ctx.author.guild.id]["BarthiccBot"][1] +=1
+				rpstandings[ctx.author.guild.id][ctx.author.name][0] +=1
 				
 			else:
 				rockEmbed.title = 'You Lost!'
 				rockEmbed.description = f"**{weapon} - {opponent}**"
+				rpstandings[ctx.author.guild.id]["BarthiccBot"][0] +=1
+				rpstandings[ctx.author.guild.id][ctx.author.name][1] +=1
 		elif weapon.lower() == 'scissors':
 			if opponent.lower() == 'scissors':
 				rockEmbed.title = 'It is a tie!'
@@ -945,10 +1301,14 @@ async def rps(ctx, member:discord.Member=""):
 			elif opponent.lower() == 'paper' :
 				rockEmbed.title = 'You Win!'
 				rockEmbed.description = f"**{weapon} - {opponent}**"
+				rpstandings[ctx.author.guild.id]["BarthiccBot"][1] +=1
+				rpstandings[ctx.author.guild.id][ctx.author.name][0] +=1
 				
 			else:
 				rockEmbed.title = 'You Loss!'
 				rockEmbed.description = f"**{weapon} - {opponent}**"
+				rpstandings[ctx.author.guild.id]["BarthiccBot"][0] +=1
+				rpstandings[ctx.author.guild.id][ctx.author.name][1] +=1
 		elif weapon.lower() == 'paper':
 			if opponent.lower() == 'paper' :
 				rockEmbed.title = 'It is a tie!'
@@ -958,14 +1318,20 @@ async def rps(ctx, member:discord.Member=""):
 				
 				rockEmbed.description = f"**{weapon} - {opponent}**"
 				win+=1
+				rpstandings[ctx.author.guild.id]["BarthiccBot"][1] +=1
+				rpstandings[ctx.author.guild.id][ctx.author.name][0] +=1
 			else:
 				rockEmbed.title = 'You Loss!'
 				loss+=1
 				rockEmbed.description = f"**{weapon} - {opponent}**"
+				rpstandings[ctx.author.guild.id]["BarthiccBot"][0] +=1
+				rpstandings[ctx.author.guild.id][ctx.author.name][1] +=1
+		
 		await ctx.send(embed=rockEmbed)
 
 @client.command()
 async def rps_standings(ctx):
+	
 	if not ctx.author.guild.id in rpstandings:
 		await ctx.send(embed=discord.Embed(title = "Rock Paper Scissors Standings", description = "Your server has not played rock paper scissors before"))
 		return
@@ -974,9 +1340,10 @@ async def rps_standings(ctx):
 		
 		win = rpstandings[ctx.author.guild.id][i][0]
 		loss = rpstandings[ctx.author.guild.id][i][1]
+		
 		win_percentage = round((win/(win+loss))*100, 3)
 		rps_pct[i] = win_percentage
-
+	
 	standingsText = "> **NAME - WIN - LOSS - WIN %**\n\n"
 	standings = sorted(rps_pct.items(), key = lambda x : x[1], reverse = True)
 	
@@ -992,8 +1359,7 @@ async def rps_standings(ctx):
 				rank = ":third_place:"
 			else:
 				rank = f"``{i+1}.``"
-			if standings[i][0] == "BarthiccBot":
-				woo+=1
+			
 			standingsText += f">  {rank}  **{standings[i+woo][0]} - ``{rpstandings[ctx.author.guild.id][standings[i+woo][0]][0]}`` - ``{rpstandings[ctx.author.guild.id][standings[i+woo][0]][1]}`` - ``{standings[i+woo][1]}``**\n\n"
 	except:
 		pass
