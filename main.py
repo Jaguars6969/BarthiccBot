@@ -1129,12 +1129,15 @@ async def rank(ctx, member : discord.Member = ""):
 
 			numero+=1
 			memberServers += 1
-			memberTotalMessages += servers[i][person]
+			try:
+				memberTotalMessages += servers[i][person]
+			except:
+				pass
 			Full_string += f"\n**{numero}.** In {server_name[i]}, you have ``{servers[i][person]} XP``\nYou are on level ``{servers[i][person]//100}``\n{rank}\nYou have ``{((1+servers[i][person]//100)*100)-servers[i][person]}`` XP left before the next level\n\n"
 
 	Full_string += f"You are in ``{memberServers} servers`` with BarthiccBot\nYou have ``{memberTotalMessages} messages in total``\n"
 	astro = discord.Embed(description = f"{Full_string}", color = random.choice(color))
-	astro.set_author(name=f'{ctx.author.name} Rank Card', icon_url = ctx.author.avatar_url)
+	astro.set_author(name=f'{person.name} Rank Card', icon_url = person.avatar_url)
 	await ctx.send(embed=astro)
 	
 
@@ -1256,6 +1259,8 @@ async def waifu(ctx):
 		response = await client.wait_for("message", timeout = 5)
 	except:
 		await ctx.send(embed= discord.Embed(title="**__WAIFU__** :woman:", description= "RIP, you missed you chance. Better Luck Next Time!", color = random.choice(color)))
+		return
+	if response.content.lower() == "!waifu":
 		return
 	
 	while response.author.name in claimer or response.content.lower() != "propose" or response.author.guild.id != ctx.author.guild.id:
