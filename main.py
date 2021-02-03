@@ -1252,10 +1252,16 @@ async def waifu(ctx):
 	goatEmbed.set_image(url= gorl)
 	notClaimed = True
 	await ctx.send(embed = goatEmbed)
-	response = await client.wait_for("message")
-	while response.author.name in claimer or response.content.lower() != "propose":
-
+	try:
 		response = await client.wait_for("message")
+	except:
+		return
+	while response.author.name in claimer or response.content.lower() != "propose":
+		try:
+			response = await client.wait_for("message")
+		except:
+			return
+		
 
 	woah = discord.Embed(description = f"You may kiss the bride\n\n{response.author.mention} is now married!")
 	woah.set_image(url=gorl)
