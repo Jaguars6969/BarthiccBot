@@ -2,20 +2,24 @@
 import discord
 from discord.ext import commands
 from webbot import Browser
-import asyncio
+import asyncio 
 import datetime
 servers = {}
 server_name = {}
+intents = discord.Intents.default()
+intents.members = True
 challenges = {}
+respons = {}
 forbidden_words = [ 'nigga', 'nigger', 'ass', 'headass', 'dickhead', 'fucker', 'faggot', 'fag']
 import random
 color = [discord.Color.red(), discord.Color.green(), discord.Color.blue(), discord.Color.purple(), discord.Color.orange()]
 people = {}
 import time
 repeat = ""
+repeatCounting = ""
 hell = ["Hi", "Hello", "Hey", "HIHIHIHIHIHIHIHIHIHI", "Namaste", "Hola", "YOOOOOOOOOOOOO", "Wassup", "Wassup Cuh", "Wassup Bluh", "Imma make sure they remember cuz I walk around with a lot of enimies", "sup", "sup dog"]
 prefix =["!8", "!"]
-client = commands.Bot(command_prefix = prefix)
+client = commands.Bot(command_prefix = prefix, intents=intents)
 client.remove_command("help")
 will = ["yes", "no"]
 by = ["cya", "bye", "see ya", "Leave", "Adios", "Sayonara", "Buh Bye"]
@@ -46,10 +50,232 @@ response = []
 league = {}
 alphabet = {"a":1, "b":2, "c":3, "d":4, "e":5, "f":6, "g":7, "h":8, "i":9, "j":10, "k":11, "l":12, "m":13, "n":14, "o":15, "p":16, "q":17, "r":18, "s":19, "t":20, "u":21, "v":22, "w":23, "x":24, "y":25, "z":26, " ":0}
 players = {}
-fareWellMessage = ""
-GreetingMessage = ""
+fareWellMessage = {}
+GreetingMessage = {}
 antiSpam = []
 mutes = {}
+
+
+
+@client.command()
+async def uno(ctx):
+	cards = ['0 🟦', '1 🟦', '2 🟦', '3 🟦', '4 🟦', '5 🟦', '6 🟦', '7 🟦', '8 🟦', '9 🟦', '🔄 🟦', '🚫 🟦', '+2🟦', '1 🟦', '2 🟦', '3 🟦', '4 🟦', '5 🟦', '6 🟦', '7 🟦', '8 🟦', '9 🟦', '🔄 🟦', '🚫 🟦', '+2🟦', '1 🟥', '2 🟥', '3 🟥', '4 🟥', '5 🟥', '6 🟥', '7 🟥', '8 🟥', '9 🟥', '🔄 🟥', '🚫 🟥', '+2🟥', '1 🟥', '2 🟥', '3 🟥', '4 🟥', '5 🟥', '6 🟥', '7 🟥', '8 🟥', '9 🟥', '🔄 🟥', '🚫 🟥', '+2🟥', '1 🟨', '2 🟨', '3 🟨', '4 🟨', '5 🟨', '6 🟨', '7 🟨', '8 🟨', '9 🟨', '🔄 🟨', '🚫 🟨', '+2🟨', '1 🟨', '2 🟨', '3 🟨', '4 🟨', '5 🟨', '6 🟨', '7 🟨', '8 🟨', '9 🟨', '🔄 🟨' , '🚫 🟨', '+2🟨', '1 🟩', '2 🟩' , '3 🟩', '4 🟩', '5 🟩', '6 🟩', '7 🟩', '8 🟩', '9 🟩', '🔄 🟩', '🚫 🟩', '+2🟩', '1 🟩', '2 🟩', '3 🟩', '4 🟩', '5 🟩', '6 🟩', '7 🟩', '8 🟩', '9 🟩', '🔄 🟩', '🚫 🟩', '+2🟩', '🟦🟥+4🟨🟩', '🟦🟥+4🟨🟩', '🟦🟥+4🟨🟩', '🟦🟥+4🟨🟩', '🟦🟥WILD🟨🟩', '🟦🟥WILD🟨🟩', '🟦🟥WILD🟨🟩', '🟦🟥WILD🟨🟩']
+	stacked = []
+	players = [ctx.author]
+	slapjackPlayer = {ctx.author.name: []}
+	not_start = True
+	await ctx.send(embed=discord.Embed(title="🟦🟥UNO!🟨🟩", description = f"Everyone! {ctx.author.name} is creating a UNO! game.\nType ``join`` to join the game.\n\n{ctx.author.mention}, type ``start`` when your ready to start the game", color = random.choice(color)))
+	
+	response = await client.wait_for("message")
+	try:
+		if response.author.id == ctx.author.id and response.content.lower() == "start":
+			not_start = False
+		elif response.content.lower() == "join" and response.author.guild.id == ctx.author.guild.id and not response.author.name in slapjackPlayer:
+			slapjackPlayer[response.author.name] = []
+			players.append(response.author)
+			await ctx.send(embed=discord.Embed(title="🟦🟥UNO!🟨🟩", description = f"{response.author.name.upper()} HAVE JOINED THE GAME", color = random.choice(color)))
+		if response.content.lower() == "end" and response.author.name == ctx.author.name:
+			await ctx.send(embed=discord.Embed(title="🟦🟥UNO!🟨🟩", description = f"The Host ended the game", color = random.choice(color)))
+			return
+	except:
+		pass
+	while not_start:
+		response = await client.wait_for("message")
+		if response.content.lower() == "end" and response.author.name == ctx.author.name:
+				await ctx.send(embed=discord.Embed(title="🟦🟥UNO!🟨🟩", description = f"The Host ended the game", color = random.choice(color)))
+				return
+		try:
+			if response.author.id == ctx.author.id and response.content.lower() == "start":
+				not_start = False
+			elif response.content.lower() == "join" and not response.author.name in slapjackPlayer and response.author.guild.id == ctx.author.guild.id:
+				slapjackPlayer[response.author.name] = []
+				players.append(response.author)
+				await ctx.send(embed=discord.Embed(title="🟦🟥UNO!🟨🟩", description = f"{response.author.name.upper()} HAVE JOINED THE GAME", color = random.choice(color)))
+		except:
+			pass
+	random.shuffle(cards)
+	slay3r = 0
+	for i in slapjackPlayer:
+		for _ in range(7):
+			slapjackPlayer[i].append(cards[0])
+			cards.pop(0)
+	stacked.append(cards[0])
+	cards.pop(0)
+	add = 1
+	g = 0
+	hurry = True
+	reversed = False
+	skipped = False
+	await ctx.send(embed=discord.Embed(title="🟦🟥UNO!🟨🟩", description = f"{ctx.author.mention} We have sent you a DM", color = random.choice(color)))
+	while True:
+
+		if g >= len(players):
+			
+			g -= len(players)
+			
+		if g < 0:
+			g += len(players)
+		i = players[g]
+	
+		print(g)
+		cardString = ""
+		for d in range(len(slapjackPlayer[i.name])):
+			cardString += f"``{d+1}``. {slapjackPlayer[i.name][d]}\n"
+		
+		st0p = discord.Embed( description=f"Top Card: {stacked[len(stacked)-1]}\n{cardString}\nTo place your card, Type the position that relates to the card.\n If you can't put any card, type ``pick`` to pick a card from the deck")
+		
+		if i == "BarthiccBot":
+			br3athing = "https://www.sohh.com/wp-content/uploads/2020/12/3b3baf71a0251cf5f7adce147c219ee5.jpg"
+		else:
+			br3athing = i.avatar_url
+		st0p.set_author(name="🟦🟥UNO!🟨🟩", icon_url = br3athing)
+		try:
+			await i.send(embed = st0p)
+		except:
+			await ctx.author.send(embed=discord.Embed(title="🟦🟥UNO!🟨🟩", description=f"{i.mention} Could you please turn on permissions that can let the bot dm you, so that we could keep your choices private? Type \"Ready\""))
+			response = await client.wait_for("message")
+			while response.content.lower() != "ready":
+				response = await client.wait_for("message")
+			try:
+				await i.send(embed = st0p)
+			except:
+				continue
+			
+
+		response = await client.wait_for("message")
+
+		while response.author.id != i.id or (not response.content.isnumeric()):
+			if response.content.lower() == "pick":
+				break
+			response = await client.wait_for("message")
+		if response.content.lower() == "pick":
+			slapjackPlayer[i.name].append(cards[0])
+			cards.pop(0)
+			g+=1
+			continue
+
+		Feb = int(response.content)-1
+		while Feb > len(slapjackPlayer[i.name])-1:
+			await i.send(embed=discord.Embed(title = "🟦🟥UNO!🟨🟩", description = "You cannot choose that number", color = random.choice(color)))
+			response = await client.wait_for("message")
+			Feb = int(response.content)-1
+			
+		maybach = slapjackPlayer[i.name][Feb]
+
+		while (maybach[0] != stacked[len(stacked)-1][0] and maybach[2] != stacked[len(stacked)-1][2]) and maybach != "🟦🟥WILD🟨🟩" and maybach != "🟦🟥+4🟨🟩" and stacked[len(stacked)-1] != "🟦🟥WILD🟨🟩" and stacked[len(stacked)-1] != "🟦🟥+4🟨🟩":
+			await i.send(embed=discord.Embed(title = "🟦🟥UNO!🟨🟩", description = "You cannot place that card on the stack, Try another card", color = random.choice(color)))
+
+			response = await client.wait_for("message")
+			Feb = int(response.content)-1
+			maybach = slapjackPlayer[i.name][Feb]
+	
+			
+		stacked.append(maybach)
+		slapjackPlayer[i.name].pop(Feb)
+
+
+		
+		Unocolor = ["red", "yellow", "blue", "green"]
+
+		if len(slapjackPlayer[i.name]) == 0:
+			break
+		if maybach[0] == "🚫":
+			g+= 2
+			continue
+			
+		elif maybach[0] == "🔄":
+			if add == 1:
+				add = -1
+			else:
+				add = 1
+		elif maybach[1] == "2":
+
+			for _ in range(2):
+				try:
+					slapjackPlayer[players[g+1].name].append(cards[0])
+					cards.pop(0)
+				except:
+					slapjackPlayer[players[g+1-len(players)].name].append(cards[0])
+					cards.pop(0)
+			g+=2
+			continue
+
+		elif maybach[2] == "+":
+			for _ in range(4):
+				try:
+					slapjackPlayer[players[g+1].name].append(cards[0])
+					cards.pop(0)
+				except:
+					if add == 1:
+						slapjackPlayer[players[g+1-len(players)].name].append(cards[0])
+					else:
+						slapjackPlayer[players[g+1+len(players)].name].append(cards[0])
+					cards.pop(0)
+			await i.send(embed=discord.Embed(title = "🟦🟥UNO!🟨🟩", description = "Which color would you like to change the stack to?"))
+			response = await client.wait_for("message") 
+			while response.author.id != i.id or not response.content.lower() in Unocolor:
+				response = await client.wait_for("message") 
+			if response.content.lower() == "red":
+				stacked.append("W 🟥")
+			elif response.content.lower() == "green":
+				stacked.append("W 🟩")
+			elif response.content.lower() == "blue":
+				stacked.append("W 🟦")
+			elif response.content.lower() == "yellow":
+				stacked.append("W 🟨")
+			g+=2
+			continue
+		elif maybach == "🟦🟥WILD🟨🟩":
+			await i.send(embed=discord.Embed(title = "🟦🟥UNO!🟨🟩", description = "Which color would you like to change the stack to?"))
+			response = await client.wait_for("message") 
+			while response.author.id != i.id or not response.content.lower() in Unocolor:
+				response = await client.wait_for("message") 
+			if response.content.lower() == "red":
+				stacked.append("W 🟥")
+			elif response.content.lower() == "green":
+				stacked.append("W 🟩")
+			elif response.content.lower() == "blue":
+				stacked.append("W 🟦")
+			elif response.content.lower() == "yellow":
+				stacked.append("W 🟨")
+		if len(slapjackPlayer[i.name]) == 0:
+
+			await ctx.send(embed=discord.Embed(title = "🟦🟥UNO!🟨🟩", description = f"{i.mention} HAS WON UNO GAME :trophy:"))
+			return
+		if len(slapjackPlayer[i.name]) == 1:
+			for g in players:
+				await g.send(embed=discord.Embed(title = "🟦🟥UNO!🟨🟩", description = f"{i.mention} HAS ONE CARD LEFT GO TO THE MAIN CHANNEL AND SAY UNO !"))
+			response = await client.wait_for("message")
+			print(add)
+			
+			while response.content.lower() != "uno" and not response.author.name in slapjackPlayer:
+				response = await client.wait_for("message")
+
+			if response.author.id != i.id:
+				slapjackPlayer[i.name].append(cards[0])
+				cards.pop(0)
+		
+		if len(cards) == 0:
+			cards = stacked
+			random.shuffle(cards)
+			stacked = [cards[0]]
+			cards.pop(0)
+		rik = ""
+		for z in slapjackPlayer:
+			rik += f"{z} - {len(slapjackPlayer[z])}\n"
+		await ctx.send(embed=discord.Embed(title = "🟦🟥UNO!🟨🟩", description=f"{i.mention} placed a {maybach}\n{rik}"))
+
+		g+=add
+
+		
+
+			
+			
+
+
+
+
+
 
 blackjackStandings = {}
 @client.command()
@@ -330,7 +556,7 @@ async def blackjack(ctx, member : discord.Member = ""):
 async def blackjack_standings(ctx):
 	
 	if not ctx.author.guild.id in blackjackStandings:
-		print(ctx.author.guild.id)
+		
 		await ctx.send(embed=discord.Embed(title = ":hearts: :diamonds:blackjack:spades: :clubs:", description = "Your server has not played rock paper scissors before"))
 		return
 	blackjack_pct = {}
@@ -338,7 +564,7 @@ async def blackjack_standings(ctx):
 		
 		win = blackjackStandings[ctx.author.guild.id][i][0]
 		loss = blackjackStandings[ctx.author.guild.id][i][1]
-		print(win, loss)
+		
 		try:
 			win_percentage = round((win/(win+loss))*100, 3)
 			blackjack_pct[i] = win_percentage
@@ -368,6 +594,27 @@ async def blackjack_standings(ctx):
 	
 
 	await ctx.send(embed=discord.Embed(title = f"Standings :trophy: For :trophy: {ctx.message.author.guild.name}", description = f"{standingsText}", color = random.choice(color)))
+
+@client.event
+async def on_member_join(member):
+	
+	for i in member.guild.channels:
+
+		if i.name == "barthiccbot-welcome-or-goodbye":
+			try:
+				
+				await client.get_channel(i.id).send(embed=discord.Embed(title = "Greeting :wave:", description = f"{random.choice(GreetingMessage[member.guild.id])}, {member.mention}! WELCOME TO {member.guild.name.upper()}!", color = random.choice(color)))
+			except:
+				await client.get_channel(i.id).send(embed=discord.Embed(title = "Greeting :wave:", description = f"{random.choice(hell)}, {member.mention}! WELCOME TO {member.guild.name.upper()}!", color = random.choice(color)))
+			return
+	channel = await member.guild.create_text_channel("BarthiccBot-Welcome-or-Goodbye")
+
+
+	try:
+				
+		await client.get_channel(channel.id).send(embed=discord.Embed(title = "Greeting :wave:", description = f"{random.choice(GreetingMessage[member.guild.id])}, {member.mention}! WELCOME TO {member.guild.name.upper()}!", color = random.choice(color)))
+	except:
+		await client.get_channel(channel.id).send(embed=discord.Embed(title = "Greeting :wave:", description = f"{random.choice(hell)}, {member.mention}! WELCOME TO {member.guild.name.upper()}!", color = random.choice(color)))
 
 
 @client.command()
@@ -517,28 +764,48 @@ async def greeting(ctx, *message):
 	if not ctx.message.author.guild_permissions.administrator:
 		await ctx.send(embed = discord.Embed(title = "Greeting :wave:", description = "YOU BUM! Only the administrator can use this command.", color = random.choice(color)))
 		return
-	GreetingMessage = " ".join(message)
-	await ctx.send(embed = discord.Embed(title = "Greeting :wave:", description = f"Greeting changed to \"{GreetingMessage}\"", color = random.choice(color)))
+	GreetingMessag = " ".join(message)
+	await ctx.send(embed = discord.Embed(title = "Greeting :wave:", description = f"Greeting changed to \"``{GreetingMessag}``\"", color = random.choice(color)))
+	try:
+		GreetingMessage[ctx.author.guild.id].append(GreetingMessag)
+	except:
+		GreetingMessage[ctx.author.guild.id]=[GreetingMessag]
+
 
 @client.command()
 async def farewell(ctx, *message):
 	if not ctx.message.author.guild_permissions.administrator:
 		await ctx.send(embed = discord.Embed(title = "Farewell :pensive:", description = "YOU BUM! Only the administrator can use this command.", color = random.choice(color)))
 		return
-	GreetingMessage = " ".join(message)
-	await ctx.send(embed = discord.Embed(title = "Farewell :pensive:", description = f"Farewell changed to \"{fareWellMessage}\"", color = random.choice(color)))
+	fareWellMessag = " ".join(message)
+	await ctx.send(embed = discord.Embed(title = "Farewell :pensive:", description = f"Farewell changed to \"``{fareWellMessag}``\"", color = random.choice(color)))
+	try:
+		fareWellMessage[ctx.author.guild.id].append(fareWellMessag)
+	except:
+		fareWellMessage[ctx.author.guild.id]=[fareWellMessag]
+
 @client.event
 async def on_member_remove(member):
-	channels = member.guild.channels
-	channel = channels[0]
-	if fareWellMessage == "":
-		greet = random.choice(hell)
-	else:
-		greet = fareWellMessage
 	
-    
+	for i in member.guild.channels:
+		
+		if i.name == "barthiccbot-welcome-or-goodbye":
+			try:
+    			
+				await client.get_channel(i.id).send(embed=discord.Embed(title = "PERSON LEFT :pensive:", description = f"{random.choice(fareWellMessage[member.guild.id])}, {member.mention}! SEE YOU NEXT TIME AT {member.guild.name.upper()}!", color = random.choice(color)))
+			except:
+				await client.get_channel(i.id).send(embed=discord.Embed(title = "PERSON LEFT :pensive:", description = f"{random.choice(by)}, {member.mention}! SEE YOU NEXT TIME AT {member.guild.name.upper()}!", color = random.choice(color)))
+			return
+	channel = await member.guild.create_text_channel("BarthiccBot-Welcome-or-Goodbye")
+	
+	
+	try:
+    			
+		await client.get_channel(channel.id).send(embed=discord.Embed(title = "PERSON LEFT :pensive:", description = f"{random.choice(fareWellMessage[member.guild.id])}, {member.mention}! SEE YOU NEXT TIME AT {member.guild.name.upper()}!", color = random.choice(color)))
+	except:
+		await client.get_channel(channel.id).send(embed=discord.Embed(title = "PERSON LEFT :pensive:", description = f"{random.choice(by)}, {member.mention}! SEE YOU NEXT TIME AT {member.guild.name.upper()}!", color = random.choice(color)))
+	
 
-	await channel.send(embed=discord.Embed(title = "PERSON LEFT :pensive:", description = f"{greet}, {member.mention}", color = random.choice(color)))
 
 @client.command()
 async def dick(ctx, member:discord.Member= " "):
@@ -561,7 +828,7 @@ async def dick(ctx, member:discord.Member= " "):
 	await ctx.send(embed=discord.Embed(title="Dick Size :eggplant:", description=f"{member.mention}'s dick is {measure} inches long :flushed:\n ```{size}```", color=random.choice(color)))
 
 @client.command()
-async def love(ctx, *message):
+async def love_calculator(ctx, *message):
 	
 	names = " ".join(message).split(",")
 	name1, name2 = names[0].lower(), names[1].lower()
@@ -603,9 +870,71 @@ async def love(ctx, *message):
 
 	await ctx.send(embed = discord.Embed(title = f"__**{names[0]} {heart} {names[1]}**__", description=f"```css\n{percentage}%\n```", color = random.choice(color)))
 repeatNum = 0
+count = {}
+chinese = {"零":"0", "一":"1", "二":"2", "三":"3", "四":"4", "五":"5", "六":"6", "七":"7", "八":"8", "九":"9", "十":"10", "百":"100", "千":"1000"}
+hindi = {"०":"0", "१":"1", "२":"2", "३":"3", "४":"4", "५":"5", "६":"6", "७":"7", "८":"8", "९":"9"}
 @client.event
 async def on_message(message):
-
+	
+	for i in respons:
+		if i in message.content.lower():
+			await message.channel.send(embed=discord.Embed(title = "Response :thinking_face:", description = respons[i]))
+		
+		
+	
+	
+	global repeatCounting
+	try:
+		if not message.author.guild.id in count:
+			count[message.author.guild.id] = 0
+	except:
+		pass
+	try:
+		numberString = ""
+		number = message.content.split(" ")
+		if number[0][0] in chinese:
+			
+			if len(number[0]) == 1:
+				numberString = chinese[number[0][0]]
+			elif len(number[0]) == 2:
+				if number[0][0] == "十":
+					numberString += "1" + chinese[number[0][1]]
+				elif number[0][1] == "十":
+					numberString +=  chinese[number[0][1]] + "0"
+				elif number[0][1] == "百":
+					numberString +=  chinese[number[0][1]] + "00"
+				elif number[0][1] == "千":
+					numberString +=  chinese[number[0][1]] + "000"
+		
+			else:
+				for i in range(0, len(number[0]), 2):
+					numberString += chinese[number[0][i]]
+			numbers = int(numberString)
+		elif number[0][0] in hindi:
+			for i in number[0]:
+				numberString += hindi[i]
+		else:
+			numbers = int(number[0])
+		
+		if int(numbers) == count[message.author.guild.id]+1:
+			if not repeatCounting == message.author.id:
+				if numbers % 100 == 0:
+					await message.add_reaction("💯")
+				else:
+					await message.add_reaction("👍")
+				repeatCounting = message.author.id
+				count[message.author.guild.id]+=1
+			else:
+				await message.channel.send(embed=discord.Embed(title = ":one: :two: :three:C0unt1n9 :four: :five: :six:", description = f"{message.author.mention}, You messed up the order at ``{numbers}``"))
+				count[message.author.guild.id] = 0
+				repeatCounting = ""
+		else:
+			await message.channel.send(embed=discord.Embed(title = ":one: :two: :three:C0unt1n9 :four: :five: :six:", description = f"{message.author.mention}, You messed up the order at ``{numbers}``"))
+			count[message.author.guild.id] = 0
+			repeatCounting = ""
+	except:
+		pass
+	
 	pop = message.content.lower().split()
 	if "am" in pop or "are" in pop or "is" in pop or "has"in pop or "have" in pop and not pop[1] in ["is", "where","who","what","why", "when"]:
 		if random.randint(0, 3) == 0:
@@ -685,7 +1014,7 @@ async def on_message(message):
 		pass
 	try:	
 		if message.author.guild.id in antiSpam:
-			if repeatNum > 10:
+			if repeatNum > 5:
 				try:
 					await message.channel.purge(limit=1)
 					await asyncio.sleep(0.25)
@@ -710,26 +1039,8 @@ async def on_message(message):
 		pass
 	
 	
-	 
-	if len(trollVictim) == 1:
-		if message.author == trollVictim[0]:
-			
-			await message.channel.send(embed=discord.Embed(title=":imp: **__Troll__** :smiling_imp:", description = f"**{response[0]}**", color = random.choice(color)))
-	else:
-		for i in range(len(trollVictim)-1):
-			
-			
-			if message.author.id == trollVictim[i]:
-				
-				await message.channel.send(embed=discord.Embed(title=":imp: **__Troll__** :smiling_imp:", description = f"**{response[i]}**", color = random.choice(color)))
-		
-	
-
 	await client.process_commands(message)
 
-@client.command()
-async def links(ctx):
-	await ctx.send(embed = discord.Embed(title = ":link: Links for BarthiccBot :link:", description = "> :email: [Invitation Link](https://discord.com/api/oauth2/authorize?client_id=770371351579852880&permissions=137526352&scope=bot)\n\n > :computer: [BarthiccBot Support Server](https://discord.gg/ePhUPNJaVN)", color = random.choice(color)))
 @client.command()
 async def standings(ctx):
 	standingsText = ""
@@ -792,7 +1103,7 @@ async def teams(ctx, numOfTeams,  *message):
 
 
 @client.command()
-async def user_stats(ctx, member : discord.Member = ""):
+async def rank(ctx, member : discord.Member = ""):
 	rank = ""
 	if member == "":
 		person = ctx.author
@@ -804,13 +1115,13 @@ async def user_stats(ctx, member : discord.Member = ""):
 	memberTotalMessages = 0
 	for i in servers:
 		
-
-		if person in servers[i]:
+		
+		if ctx.author.guild.id == i:
 			standings = sorted(servers[i].items(), key = lambda x : x[1], reverse = True)
 			
 			for b in range(len(standings)):
 				if person.id == standings[b][0].id:
-					rank = f"Your rank in the server is ```{b+1}```"
+					rank = f"Your rank in the server is ``{b+1}``"
 
 			if rank == "":
 				rank = "You are unranked in the server"
@@ -819,19 +1130,21 @@ async def user_stats(ctx, member : discord.Member = ""):
 			numero+=1
 			memberServers += 1
 			memberTotalMessages += servers[i][person]
-			Full_string += f"\n**{numero}.** In {server_name[i]}, you have ```{servers[i][person]} messages```\nYou are on level ```{servers[i][person]//100}```\n{rank}\nYou have ```{((1+servers[i][person]//100)*100)-servers[i][person]}``` messages left before the next level\n\n"
+			Full_string += f"\n**{numero}.** In {server_name[i]}, you have ``{servers[i][person]} XP``\nYou are on level ``{servers[i][person]//100}``\n{rank}\nYou have ``{((1+servers[i][person]//100)*100)-servers[i][person]}`` XP left before the next level\n\n"
 
-	Full_string += f"You are in ``{memberServers} servers`` with BarthiccBot\nYou have ```{memberTotalMessages} messages in total```\n"
-
-	await ctx.send(embed=discord.Embed(title= "**__User Stats__ :bar_chart:**", description = f"{Full_string}", color = random.choice(color)))
+	Full_string += f"You are in ``{memberServers} servers`` with BarthiccBot\nYou have ``{memberTotalMessages} messages in total``\n"
+	astro = discord.Embed(description = f"{Full_string}", color = random.choice(color))
+	astro.set_author(name=f'{ctx.author.name} Rank Card', icon_url = ctx.author.avatar_url)
+	await ctx.send(embed=astro)
 	
 
 
 @client.event
 async def on_ready():
 
-	print("ready")
-	await client.change_presence( activity=discord.Game(name="You 😏 (type !help to see the help menu)"))
+	print(len(client.guilds))
+
+	await client.change_presence( activity=discord.Game(name=f"{len(client.guilds)} servers 😈\n PLEASE VOTE FOR MY BOT: https://top.gg/bot/770371351579852880\n (type !help to see the help menu)"))
 
 
 
@@ -929,39 +1242,66 @@ async def cat(ctx):
 	catEmbed = discord.Embed(title="**__CAT__** :cat:", color = random.choice(color))
 	catEmbed.set_image(url = random.choice(ca))
 	await ctx.send(embed = catEmbed)
-
+claimer = []
+claim = []
 @client.command(aliases = [])
 async def waifu(ctx):
-	waif = ["https://qph.fs.quoracdn.net/main-qimg-1b2b48639a0af3f11c3964947ca99eb6", "https://thicc.mywaifulist.moe/waifus/2644/9990491ab8ff677202a435f64bbf37a5438780e14650244062c9356faea63be4_thumb.jpeg", "https://pbs.twimg.com/media/EfoABDaXgAA_WJg.jpg", "https://thicc.mywaifulist.moe/waifus/1192/89db9db0a26f5a3ea6cf6a077fc17c8d0f3ae979b92f068cb04a07ca2b221d0c_thumb.jpeg", "https://i.pinimg.com/originals/ee/59/5c/ee595c95b669d88b9c3c841dd5d02554.jpg", "https://thicc.mywaifulist.moe/waifus/344/56b6683a1aa73ca5f0ae7ce1ba3b18de3dffe059bcd530562fbd975a54b82dc1_thumb.png", "https://pm1.narvii.com/6872/10d1cafbd98699d21f987e56ee316e95b708bdf2r1-1000-1427v2_uhq.jpg", "https://cdn.discordapp.com/attachments/662390318703837234/780879320267751434/fd6e577311c306485a2791623ff20d3c.png", "https://cdn.discordapp.com/attachments/662390318703837234/780878494468276255/South.png", "https://cdn.discordapp.com/attachments/662390318703837234/780878064569548850/5bb41ab9844ad3e6932cf81dd39d414f_7c6b7ced4ea068ba5b8b3226c508af58.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877841729847306/f2tq37capn421.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877671776256061/dkKtV5d.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877407502204958/Saber.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877244326871060/tumblr_oy4x0wDFrq1smzgcuo1_400.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877114542260264/latest.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877021630300160/original.png", "https://cdn.discordapp.com/attachments/662390318703837234/780876257570979840/239835.png", "https://cdn.discordapp.com/attachments/662390318703837234/780876111441559552/6a705cdefb63285ff29869d72919a6c2.png", "https://cdn.discordapp.com/attachments/774463189181267970/796894840582701107/image0.jpg", "https://cdn.discordapp.com/attachments/774463189181267970/796894840805654575/image1.jpg", "https://cdn.discordapp.com/attachments/774463189181267970/796894841144475698/image2.jpg", "https://cdn.discordapp.com/attachments/774463189181267970/796894841434931220/image3.jpg", "https://cdn.discordapp.com/attachments/796792011654955048/796792028801138769/54ccb70cf3f3ca5482a5bd8fa0ca196a.jpg", "https://cdn.discordapp.com/attachments/796792011654955048/796792050707857488/9516ab8ffd06d1f18dc641239734790d887a0533r1-640-360v2_uhq.jpg", "https://cdn.discordapp.com/attachments/796792011654955048/796793520048439386/nodoka2.jpg", "https://cdn.discordapp.com/attachments/796792011654955048/797153662585143387/tumblr_mzitcqigKO1r6eyjlo1_1280.png", "https://cdn.discordapp.com/attachments/796792011654955048/797154489466748958/Gasai_yuno_render_by_annaeditions24-d6ruhy7.png", "https://cdn.discordapp.com/attachments/796792011654955048/797155900178563112/803657-moe_12981_sample.jpg", "https://i.pinimg.com/736x/e1/7d/51/e17d519f087135925d9036ac9d12b857.jpg", "https://img.wattpad.com/8e9411e013bbfe7aff3794215a86985e16e01ada/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f776174747061642d6d656469612d736572766963652f53746f7279496d6167652f36626239686f6e347259533233673d3d2d3731333537393934302e313539313035613734656633306266663231303438313630373539312e706e67?s=fit&w=720&h=720", "https://i.ytimg.com/vi/_NkxM_uLUpw/maxresdefault.jpg", "https://cdn.discordapp.com/attachments/796792011654955048/798212352638058516/download_1.jpg", "https://i.pinimg.com/originals/93/dd/3a/93dd3a329974c21d4b1db888d481f330.png", "https://i.pinimg.com/originals/c9/37/c2/c937c2434c5f4a50f385b630fed837c3.png", "https://static.wikia.nocookie.net/kimetsu-no-yaiba/images/a/ad/Mitsuri_colored_body.png/revision/latest?cb=20191116164005", "https://cdn.discordapp.com/attachments/796792011654955048/798320124590555176/maxresdefault_2.jpg"]
-	goatEmbed  = discord.Embed(title="**__WAIFU__** :woman:", color = random.choice(color))
-	goatEmbed.set_image(url=random.choice(waif))
+	waif =["https://cdn.discordapp.com/attachments/804758426731282442/805548225200521219/d46f4e171532ef5ea17a5a41fe94a661.png","https://qph.fs.quoracdn.net/main-qimg-1b2b48639a0af3f11c3964947ca99eb6", "https://thicc.mywaifulist.moe/waifus/2644/9990491ab8ff677202a435f64bbf37a5438780e14650244062c9356faea63be4_thumb.jpeg", "https://pbs.twimg.com/media/EfoABDaXgAA_WJg.jpg", "https://thicc.mywaifulist.moe/waifus/1192/89db9db0a26f5a3ea6cf6a077fc17c8d0f3ae979b92f068cb04a07ca2b221d0c_thumb.jpeg", "https://i.pinimg.com/originals/ee/59/5c/ee595c95b669d88b9c3c841dd5d02554.jpg", "https://thicc.mywaifulist.moe/waifus/344/56b6683a1aa73ca5f0ae7ce1ba3b18de3dffe059bcd530562fbd975a54b82dc1_thumb.png", "https://pm1.narvii.com/6872/10d1cafbd98699d21f987e56ee316e95b708bdf2r1-1000-1427v2_uhq.jpg", "https://cdn.discordapp.com/attachments/662390318703837234/780879320267751434/fd6e577311c306485a2791623ff20d3c.png", "https://cdn.discordapp.com/attachments/662390318703837234/780878494468276255/South.png", "https://cdn.discordapp.com/attachments/662390318703837234/780878064569548850/5bb41ab9844ad3e6932cf81dd39d414f_7c6b7ced4ea068ba5b8b3226c508af58.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877841729847306/f2tq37capn421.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877671776256061/dkKtV5d.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877407502204958/Saber.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877244326871060/tumblr_oy4x0wDFrq1smzgcuo1_400.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877114542260264/latest.png", "https://cdn.discordapp.com/attachments/662390318703837234/780877021630300160/original.png", "https://cdn.discordapp.com/attachments/662390318703837234/780876257570979840/239835.png", "https://cdn.discordapp.com/attachments/662390318703837234/780876111441559552/6a705cdefb63285ff29869d72919a6c2.png", "https://cdn.discordapp.com/attachments/774463189181267970/796894840582701107/image0.jpg", "https://cdn.discordapp.com/attachments/774463189181267970/796894840805654575/image1.jpg", "https://cdn.discordapp.com/attachments/774463189181267970/796894841144475698/image2.jpg", "https://cdn.discordapp.com/attachments/774463189181267970/796894841434931220/image3.jpg", "https://cdn.discordapp.com/attachments/796792011654955048/796792028801138769/54ccb70cf3f3ca5482a5bd8fa0ca196a.jpg", "https://cdn.discordapp.com/attachments/796792011654955048/796792050707857488/9516ab8ffd06d1f18dc641239734790d887a0533r1-640-360v2_uhq.jpg", "https://cdn.discordapp.com/attachments/796792011654955048/796793520048439386/nodoka2.jpg", "https://cdn.discordapp.com/attachments/796792011654955048/797153662585143387/tumblr_mzitcqigKO1r6eyjlo1_1280.png", "https://cdn.discordapp.com/attachments/796792011654955048/797154489466748958/Gasai_yuno_render_by_annaeditions24-d6ruhy7.png", "https://cdn.discordapp.com/attachments/796792011654955048/797155900178563112/803657-moe_12981_sample.jpg", "https://i.pinimg.com/736x/e1/7d/51/e17d519f087135925d9036ac9d12b857.jpg", "https://img.wattpad.com/8e9411e013bbfe7aff3794215a86985e16e01ada/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f776174747061642d6d656469612d736572766963652f53746f7279496d6167652f36626239686f6e347259533233673d3d2d3731333537393934302e313539313035613734656633306266663231303438313630373539312e706e67?s=fit&w=720&h=720", "https://i.ytimg.com/vi/_NkxM_uLUpw/maxresdefault.jpg", "https://cdn.discordapp.com/attachments/796792011654955048/798212352638058516/download_1.jpg", "https://i.pinimg.com/originals/93/dd/3a/93dd3a329974c21d4b1db888d481f330.png", "https://i.pinimg.com/originals/c9/37/c2/c937c2434c5f4a50f385b630fed837c3.png", "https://static.wikia.nocookie.net/kimetsu-no-yaiba/images/a/ad/Mitsuri_colored_body.png/revision/latest?cb=20191116164005", "https://cdn.discordapp.com/attachments/796792011654955048/798320124590555176/maxresdefault_2.jpg", "https://cdn.discordapp.com/attachments/804760663079256094/804760993997520936/Screenshot_20210112-132650_Video_Player.jpg", "https://cdn.discordapp.com/attachments/796792011654955048/805505701505007666/ovb5rbbklj651.jpg", "https://cdn.discordapp.com/attachments/796792011654955048/804794777702105098/7l9pnz01ulv51.jpg", "https://cdn.discordapp.com/attachments/796792011654955048/804479341949616148/urr1g6uharo41.jpg", "https://cdn.discordapp.com/attachments/796792011654955048/804479321938067476/sample-bec58a60df9db9b1e2a7fc207e0a17ca.jpg", "https://cdn.discordapp.com/attachments/805500452309434408/805500730554843216/image0.png", "https://cdn.discordapp.com/attachments/805500452309434408/805500649638854696/image0.jpg", "https://cdn.discordapp.com/attachments/805500452309434408/805500620483199017/image0.jpg", "https://cdn.discordapp.com/attachments/805500452309434408/805500585859350538/image0.webp", "https://cdn.discordapp.com/attachments/805500452309434408/805500563256115240/image1.jpg", "https://cdn.discordapp.com/attachments/805500452309434408/805500562984009758/image0.webp", "https://cdn.discordapp.com/attachments/804835963117240400/805539454067539968/1612118724200.png", "https://cdn.discordapp.com/attachments/804835963117240400/805512130479521792/ndRemqC.jpg", "https://cdn.discordapp.com/attachments/804835963117240400/805512130127986738/qbyQlgh.png", "https://cdn.discordapp.com/attachments/804835963117240400/805512129910013953/ddcczh7-70f51b7e-b1d0-479c-8c3b-3b5b42b85bd0.jpg", "https://cdn.discordapp.com/attachments/804835963117240400/805512129649573948/MW-05-Office-Nyarla.png", "https://cdn.discordapp.com/attachments/804835963117240400/805512129091207209/dc977lq-84755a5e-433b-45e4-a8d6-aeffa67eed8a.jpg", "https://cdn.discordapp.com/attachments/804835963117240400/805512127997542480/tumblr_phq2i5H3PO1qzmx5io1_1280.jpg", "https://cdn.discordapp.com/attachments/804835963117240400/805512127577194506/b7b85a5e75ed9ee7d81223199f066879.jpg", "https://cdn.discordapp.com/attachments/804835963117240400/805501040966500352/PCi3BOn.jpg", "https://cdn.discordapp.com/attachments/804835963117240400/805152069979602984/EMGhh7xUUAEXKLw.jpeg", "https://cdn.discordapp.com/attachments/804835963117240400/805149636843143238/rper0qituoq11.jpg", "https://cdn.discordapp.com/attachments/804835963117240400/805149636524244992/4zfKlvbUEXLY-iRvWIK-MAZR__yNcgC3NI10NxwYpZs.jpg", "https://cdn.discordapp.com/attachments/804835963117240400/805149635974660117/Sword_Maiden_First_Appearence.png", "https://cdn.discordapp.com/attachments/804835963117240400/804846824972091392/dcnsdrg-350106fe-7086-4e37-abc6-9b191ef9e9dd.png", "https://cdn.discordapp.com/attachments/804835963117240400/804846824547942430/EZa9KlgXgAIYzjJ.jpg", "https://cdn.discordapp.com/attachments/804835963117240400/804846824761720872/cdd6a606da89253468c41514dace4eda.jpg", "https://cdn.discordapp.com/attachments/804835963117240400/804837708715262002/sample-65d52200b1023f72518be1ba9e71e569.jpg", "https://cdn.discordapp.com/attachments/804835963117240400/804836650676256768/vrnjfeshnjt41.jpg", "https://cdn.discordapp.com/attachments/804835963117240400/804836644217028708/k7jbrqwlqzh51.png", "https://cdn.discordapp.com/attachments/804835963117240400/804836637774315620/joel-joey-lacsa-lucoabikinismall2.jpg", "https://cdn.discordapp.com/attachments/804835963117240400/804836632174919681/403.jpg", "https://cdn.discordapp.com/attachments/804835963117240400/804836635740340244/dd14yws-efea4f7e-0b9e-4363-a51f-6897314e7b18.jpg"]
+	goatEmbed  = discord.Embed(title="**__WAIFU__** :woman:", description= "Type ``propose`` to ask for her hand in marriage", color = random.choice(color))
+	gorl = random.choice(waif)
+	goatEmbed.set_image(url= gorl)
+	notClaimed = True
 	await ctx.send(embed = goatEmbed)
+	response = await client.wait_for("message")
+	while response.author.name in claimer or response.content.lower() != "propose":
+
+		response = await client.wait_for("message")
+
+	woah = discord.Embed(description = f"You may kiss the bride\n\n{response.author.mention} is now married!")
+	woah.set_image(url=gorl)
+	woah.set_author(name=f'{response.author.name}\'s Wedding', icon_url = response.author.avatar_url)
+	await ctx.send(embed=woah)
+	claimer.append(response.author.name)
+	claim.append(gorl)
+
+
 @client.command()
 async def bot_settings(ctx):
-	await ctx.send(embed=discord.Embed(title = "__**Prefix Commands :computer:**__", description = f"\n> ```{prefix[1]}add_prefix <prefix>```\n> ```{prefix[1]}delete_prefix <prefix>```\n> ```{prefix[1]}default_prefix <prefix>```\n> ```{prefix[1]}prefixes```\n", color = random.choice(color)))
+	await ctx.send(embed=discord.Embed(title = "__**Prefix Commands :computer:**__", description = f"\n> ```{prefix[1]}add_prefix [prefix] ```\n> ```{prefix[1]}delete_prefix [prefix] ```\n> ```{prefix[1]}default_prefix [prefix] ```\n> ```{prefix[1]}prefixes```\n", color = random.choice(color)))
 
 @client.command()
 async def games(ctx):
-	await ctx.send(embed=discord.Embed(title = "__** :game_die: Fun :8ball: Games :coin: **__", description = f"\n> ```{prefix[1]}8ball <Your question>```\n> ```{prefix[1]}roll <max number>```\n> ```{prefix[1]}flip```\n> ```{prefix[1]}rps <weapon (rock, paper, or scissors)>```", color = random.choice(color)))
+	await ctx.send(embed=discord.Embed(title = "__** :game_die: Fun :8ball: Games :coin: **__", description = f"\n> ```{prefix[1]}rps [member (optional)] ```\n> ```{prefix[1]}uno [member (optional)] ```\n> ```{prefix[1]}blackjack [member (optional)] ```", color = random.choice(color)))
+@client.command()
+async def stats(ctx):
+	await ctx.send(embed=discord.Embed(title = ":chart_with_upwards_trend: STATS :chart_with_downwards_trend: ", description = f"\n> ```{prefix[1]}rps_standings```\n> ```{prefix[1]}standings```\n> ```{prefix[1]}blackjack_standings```\n> ```{prefix[1]}rank [member (Optional)] ```", color = random.choice(color)))
+@client.command()
+async def utilities(ctx):
+	await ctx.send(embed=discord.Embed(title = "__**Utilities**__", description = f"\n> ```{prefix[1]}avatar [member (optional)] ```\n> ```{prefix[1]}8ball [Your question] ```\n> ```{prefix[1]}roll```\n> ```{prefix[1]}flip```\n> ```{prefix[1]}dm [member] [message] ```\n> ```{prefix[1]}poll [question] ```\n> ```{prefix[1]}poll [question] [options seperated by semicolons] ```\n> ```{prefix[1]}goat```\n> ```{prefix[1]}cat```\n> ```{prefix[1]}dog```", color = random.choice(color)))
 
 @client.command()
 async def chat(ctx):
-	await ctx.send(embed=discord.Embed(title = "__**Chat :wave:**__", description = f"\n> ```{prefix[1]}wassup```\n> ```{prefix[1]}hi```\n> ```{prefix[1]}owo```\n> ```{prefix[1]}pain```\n>  ```{prefix[1]}bye```\n", color = random.choice(color)))
+	await ctx.send(embed=discord.Embed(title = "__**Chat :wave:**__", description = f"\n> ```{prefix[1]}wassup```\n> ```{prefix[1]}hi```\n> ```{prefix[1]}owo```\n> ```{prefix[1]}pain```\n>  ```{prefix[1]}bye```\n>  ```{prefix[1]}response [trigger word] [response] ```\n", color = random.choice(color)))
 
 @client.command()
 async def time_commands(ctx):
-	await ctx.send(embed=discord.Embed(title = "__**time :clock:**__", description = "\n>  ```{prefix[1]}timer <hours> <minutes> <second>```\n>  ```{prefix[1]}stopwatch```\n>  ```{prefix[1]}stop_stopwatch```\n>  ```{prefix[1]}alarm <finish time> <AM or PM> <notes>```\n>  ```{prefix[1]}stop_alarm```", color = random.choice(color)))
-	
+	await ctx.send(embed=discord.Embed(title = "__**Time :clock:**__", description = f"\n>  ```{prefix[1]}timer [hours] [minutes] [second] ```\n>  ```{prefix[1]}stopwatch```\n>  ```{prefix[1]}stop_stopwatch```", color = random.choice(color)))
 
+@client.command()
+async def love(ctx):
+	await ctx.send(embed=discord.Embed(title = "__**Love :heart:**__", description = f"\n>  ```{prefix[1]}waifu```\n>  ```{prefix[1]}waifu_stats [member (Optional)] ```\n>  ```{prefix[1]}dick [member (Optional)] ```\n>  ```{prefix[1]}love_calculator [names seperated by commas] ```", color = random.choice(color)))
+@client.command()
+async def descision(ctx):
+	await ctx.send(embed=discord.Embed(title = "__**Choose :thinking_face: **__", description = f"\n>  ```{prefix[1]}choose [Options] ```\n>  ```{prefix[1]}random_order [Options] ```\n>  ```{prefix[1]}teams [number of teams] [players seperated by commas] ```", color = random.choice(color)))
 @client.command()
 async def admin_commands(ctx):
 	try:
-		await ctx.author.send(embed=discord.Embed(title = "__**Administrator Commands**__", description = f"\n> ```{prefix[1]}greeting <message>\n>```{prefix[1]}farewell <message>```\n> ```{prefix[1]}kick <member ping> <reason>```", color = random.choice(color)))
+		await ctx.author.send(embed=discord.Embed(title = "__**Administrator Commands**__", description = f"\n> ```{prefix[1]}greeting [message] \n> ```{prefix[1]}farewell [message]``` \n>```{prefix[1]}kick [member ping] [reason] ```\n> ```{prefix[1]}mute [member] ```\n> ```{prefix[1]}unmute [member] ```\n> ```{prefix[1]}antispam ```", color = random.choice(color)))
 	except:
-		await ctx.send(embed=discord.Embed(title = "__**Administrator Commands**__", description = f"\n> ```{prefix[1]}greeting <message>```\n> ```{prefix[1]}```\n> ```{prefix[1]}farewell <message>```\n> ```{prefix[1]}kick <member ping> <reason>```", color = random.choice(color)))
+		await ctx.send(embed=discord.Embed(title = "__**Administrator Commands**__", description = f"\n> ```{prefix[1]}greeting [message] ```\n> ```{prefix[1]}```\n>```{prefix[1]}farewell [message]``` \n> ```{prefix[1]}kick <member ping> [reason] ```", color = random.choice(color)))
 @client.command()
 async def help(ctx):
-	menu = f"__**Table of Contents of help menu**__\n> ```{prefix[1]}bot_settings```\n> ```{prefix[1]}games```\n> ```{prefix[1]}chat```\n> ```{prefix[1]}time_commands```\n> ```{prefix[1]}decision ```\n> ```{prefix[1]}stats```"
+	menu = f"__**Table of Contents of help menu**__\n> :ballot_box: VOTE FOR MY BOT [HERE](https://top.gg/bot/770371351579852880)\n> :email: [Invitation Link](https://discord.com/api/oauth2/authorize?client_id=770371351579852880&permissions=137526352&scope=bot)\n > :computer: [BarthiccBot Support Server](https://discord.gg/ePhUPNJaVN)\n\nAlways on Bot Commands:\n> ```Counting```\n> ```Cap```\n> ```{prefix[1]}bot_settings```\n> ```{prefix[1]}games```\n> ```{prefix[1]}chat```\n> ```{prefix[1]}time_commands```\n> ```{prefix[1]}descision ```\n> ```{prefix[1]}stats```\n> ```{prefix[1]}utilities```\n> ```{prefix[1]}stats```"
 
 
 	
@@ -995,10 +1335,14 @@ async def default_prefix(ctx, pref):
 
 
 @client.command()
-async def avatar(ctx, member: discord.Member):
-	ayo = discord.Embed(description = f"{member.mention}\'s Avatar")
+async def avatar(ctx, member: discord.Member=""):
+	if member =="":
+		what = ctx.author
+	else:
+		what = member
+	ayo = discord.Embed(description = f"{what.mention}\'s Avatar")
 
-	ayo.set_image(url=member.avatar_url)
+	ayo.set_image(url=what.avatar_url)
 	ayo.color = random.choice(color)
 	await ctx.send(embed=ayo)
 
@@ -1148,7 +1492,7 @@ async def waifu_stats(ctx, member:discord.Member=""):
 
 	uzi += f"Average Rating: {avg//6}/10"
 	stateEmbed = discord.Embed(description = uzi, color =random.choice(color))
-	stateEmbed.set_author(name=f'{ctx.author.name}\'s Waifu Stats', icon_url = ctx.author.avatar_url)
+	
 	await ctx.send(embed=stateEmbed)
 
 		
@@ -1422,75 +1766,12 @@ async def stop_stopwatch(ctx):
 	await ctx.send(embed=discord.Embed(title="**__Stopwatch__** :stopwatch:", description = f"{ctx.author.mention} took ***{round(timeElapsed, 1)} ***", color = random.choice(color)))
 
 @client.command()
-async def troll(ctx, member:discord.Member, *message):
-	if not ctx.message.author.guild_permissions.administrator:
-		await ctx.send(embed = discord.Embed(title = ":imp: Troll :smiling_imp:", description = "YOU BUM! Only the administrator can use this command.", color = random.choice(color)))
-		return
-	if message == [] or message == [""] or message == [" "]:
-		await ctx.send(title= ":imp: Troll :smiling_imp:", description = f"{ctx.author.mention}, you can't send a blank troll! :rage:", color = random.choice(color))
-		return
-	if member.id != 770371351579852880:
-		trollz.append(ctx.message.author.id)
-		trollVictim.append(member.id)
-		response.append(" ".join(message))
-		
-		await ctx.send(embed=discord.Embed(title=":smiling_imp: Troll :imp:", description= f"Troll created for {member.mention}", color = random.choice(color)))
-	else:
-		trollEmbed = discord.Embed(title=":smiling_imp: Troll :imp:", description= f"You can't troll the bot", color = random.choice(color))
-
-		trollEmbed.set_image(url="https://tenor.com/view/nonono-sports-fingerwag-gif-4570396")
-		await ctx.send(embed=trollEmbed)
-
-@client.command()
-async def stop_troll(ctx, member:discord.Member, *message):
-	if not ctx.message.author.server_permissions.administrator:
-		await ctx.send(title = ":imp: Troll :smiling_imp", description = "YOU BUM! Only the administrator can use this command.", color = random.choice(color))
-		return
-	try:
-		index = trollz.index(ctx.author.id)
-		trollz.pop(index)
-		trollVictim.pop(index)
-		response.pop(index)
-	except:
-		await ctx.send(embed=discord.Embed(title=":smiling_imp: Troll :imp:", description= f"Troll not found under the name of {ctx.author.mention}", color = random.choice(color)))
-		return
+async def response(ctx, word, *messag):
+	woo = " ".join(messag)
+	await ctx.send(embed=discord.Embed(title="Response", description= f"New response created\nTrigger Word: ``{word}``\nResponse: ``{woo}``"))
 	
-	await ctx.send(embed=discord.Embed(title=":smiling_imp: Troll :imp:", description= f"Troll deleted for {member.mention}", color = random.choice(color)))
-rolex = {}
-@client.command()
-async def alarm(ctx, finishTime, timeOfDay, *message ):
-	if ctx.author in rolex:
-		await ctx.send(embed = discord.Embed(title = "Alarm :alarm_clock:", description = "You can't have two alarm clocks at the same time!", color = random.choice(color)))
-		return
-	else:
-		rolex[ctx.author] = " ".join(message)
-	try:
-		hour = int(finishTime[0:2])
-		minutes = int(finishTime[3:])
-		
-	except:
-		hour = int(finishTime[0]) 
-		minutes = int(finishTime[2:])
-		
+	respons[word] = woo
 
-	if timeOfDay.lower() == "pm":
-		hour += 12
-	finishTimeInSeconds = hour*60*60 + minutes*60 - time.time()
-	await ctx.send(embed = discord.Embed(title = "Alarm :alarm_clock:", description = f"{ctx.author.mention}'s alarm is set to {finishTime} {timeOfDay}\n {rolex[ctx.author]}", color = random.choice(color)))
-	
-
-
-
-	await asyncio.sleep(finishTimeInSeconds)
-	try:
-		await ctx.send(title = "Alarm :alarm_clock:", description = f"{ctx.author.mention} \n**__{rolex[ctx.author.mention]}", color = random.choice(color))
-	except:
-		pass
-	
-@client.command()
-async def stop_alarm(ctx):
-	await ctx.send(title = "Alarm :alarm_clock:", description = f"{ctx.author.mention}'s alarm is cancelled", color = random.choice(color))
-	rolex.pop(ctx.author)
 
 @client.command()
 async def choose(ctx, *messages):
@@ -1524,3 +1805,4 @@ async def choose(ctx, *messages):
 
 client.run("NzcwMzcxMzUxNTc5ODUyODgw.X5cmOw.ro1Wl0rToU8FodI2wcLo4r3RLvo")
 
+    
