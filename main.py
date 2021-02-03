@@ -1259,7 +1259,7 @@ async def waifu(ctx):
 	while response.author.name in claimer or response.content.lower() != "propose":
 		if response.author.name in claimer:
 			woah = discord.Embed(description = f"You are already married to ")
-			woah.set_image(url=claimer[response.author.name]
+			woah.set_image(url=claimer[response.author.name])
 			woah.set_author(name=f'Is {response.author.name} cheating?', icon_url = response.author.avatar_url)
 			await ctx.send(embed=woah)
 		try:
