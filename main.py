@@ -1265,6 +1265,9 @@ async def waifu(ctx):
 	bruh = False
 	
 	while (response.author.name in claimer and response.content.lower() == "propose") or response.content.lower() != "propose" or response.author.guild.id != ctx.author.guild.id:
+		if response.content.lower() == "!waifu":
+			return
+		
 		if (response.author.name in claimer and response.content.lower() == "propose"):
 			woah = discord.Embed(description = f"You are already married to ")
 			woah.set_image(url=claim[claimer.index(response.author.name)])
