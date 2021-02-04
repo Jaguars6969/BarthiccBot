@@ -1263,15 +1263,16 @@ async def waifu(ctx):
 	if response.content.lower() == "!waifu":
 		return
 	bruh = False
-	while response.author.name in claimer or response.content.lower() != "propose" or response.author.guild.id != ctx.author.guild.id:
-		if response.author.name in claimer and bruh == False:
+	
+	while (response.author.name in claimer and response.content.lower() == "propose") or response.content.lower() != "propose" or response.author.guild.id != ctx.author.guild.id:
+		if (response.author.name in claimer and response.content.lower() == "propose"):
 			woah = discord.Embed(description = f"You are already married to ")
 			woah.set_image(url=claim[claimer.index(response.author.name)])
 			woah.set_author(name=f'Is {response.author.name} cheating?', icon_url = response.author.avatar_url)
 			await ctx.send(embed=woah)
 			bruh = True
 		try:
-			response = await client.wait_for("message", )
+			response = await client.wait_for("message", timeout=3)
 		except:
 			return
 		
@@ -1282,7 +1283,20 @@ async def waifu(ctx):
 	await ctx.send(embed=woah)
 	claimer.append(response.author.name)
 	claim.append(gorl)
-
+@client.command()
+async def divorce(ctx):
+	if not ctx.author.name in claimer:
+		woah = discord.Embed(description = "You actually need to have a wife to get divorce :clown:")
+		woah.set_author(name=f'{ctx.author.name}\'s Divorce', icon_url = ctx.author.avatar_url)
+		await ctx.send(embed=woah)
+		return
+	claim.pop(claimer.index(ctx.author.name))
+	claimer.remove(ctx.author.name)
+	woah = discord.Embed(description = "You have successfully filed for divorce")
+	woah.set_author(name=f'{ctx.author.name}\'s Divorce', icon_url = ctx.author.avatar_url)
+	await ctx.send(embed=woah)
+	
+	
 
 @client.command()
 async def bot_settings(ctx):
