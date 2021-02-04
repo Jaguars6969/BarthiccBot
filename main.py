@@ -1262,13 +1262,14 @@ async def waifu(ctx):
 		return
 	if response.content.lower() == "!waifu":
 		return
-	
+	bruh = False
 	while response.author.name in claimer or response.content.lower() != "propose" or response.author.guild.id != ctx.author.guild.id:
-		if response.author.name in claimer:
+		if response.author.name in claimer and bruh == False:
 			woah = discord.Embed(description = f"You are already married to ")
-			woah.set_image(url=claimer[response.author.name])
+			woah.set_image(url=claim[claimer.index(response.author.name)])
 			woah.set_author(name=f'Is {response.author.name} cheating?', icon_url = response.author.avatar_url)
 			await ctx.send(embed=woah)
+			bruh = True
 		try:
 			response = await client.wait_for("message", )
 		except:
