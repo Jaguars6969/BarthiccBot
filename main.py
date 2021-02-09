@@ -969,7 +969,7 @@ async def on_message(message):
 	try:
 		if not message.author.guild.id in count:
 			count[message.author.guild.id] = 0
-			number_channel[message.author.guild.id] = message.channel.id
+			
 	except:
 		pass
 	try:
@@ -999,10 +999,12 @@ async def on_message(message):
 		else:
 			numbers = int(number[0])
 		
-		if message.channel.id != number_channel[message.author.guild.id]:
+		if message.author.guild.id in number_channel and message.channel.id != number_channel[message.author.guild.id]:
 			
 			a = 0
 		elif int(numbers) == count[message.author.guild.id]+1:
+			if not message.author.guild.id in number_channel:
+				number_channel[message.author.guild.id] = message.channel.id
 			if not repeatCounting == message.author.id:
 				if numbers % 100 == 0:
 					await message.add_reaction("💯")
