@@ -54,8 +54,55 @@ fareWellMessage = {}
 GreetingMessage = {}
 antiSpam = []
 mutes = {}
+@client.event
+async def on_guild_join(guild):
+	woo = discord.Embed( description = f"**Thank you, {guild.name} for inviting BarthiccBot to your server\n\nBarthiccBot is a A multiple purpose bots that include playing games like blackjack with your friends, fun utilities, and easy to access moderation commands\n\nType !help to have access to over 61 different commands and make sure to try it all\n\n> :ballot_box: PLEASE UPVOTE FOR MY BOT [HERE](https://top.gg/bot/770371351579852880/vote)\n\n> :email: MAKE SURE YOU INVITE THE BOT TO OTHER SERVERS USING THE [INVITATION LINK](https://discord.com/api/oauth2/authorize?client_id=770371351579852880&permissions=137526352&scope=bot)\n\n> :computer: JOIN OUR [BARTHICCBOT SUPPORT SERVER](https://discord.gg/ePhUPNJaVN)\n\nMake sure to add the creator ``Barthicc#8624`` as a friend if you have any suggestions or we can chat**", color = random.choice(color))
+	woo.set_author(name = "SAY HELLO TO BARTHICCBOT :D", icon_url= "https://www.sohh.com/wp-content/uploads/2020/12/3b3baf71a0251cf5f7adce147c219ee5.jpg")
+	woo.set_thumbnail(url=guild.icon_url)
+	try:
+		await guild.text_channels[0].send(embed=woo)
+	except:
+
+		pass
+"""async def drive(name, opp, ur, their, yard, channel):
+	while yard <= 100 and yard >=0:
+		down = 1
+		till = 10
+		string = ""
+		
+		string += f"{down} & {till}\n"
+		if yard < 50:
+			string += f"On {name[0:3].upper()} {yard}"
+		elif yard > 50:
+			yard += f"On {opp[0:3].upper()} {100-yard} "
+		else:
+			yard += "You are on the 50 yard line"
+		string += f"\n{ur} - {their}\n"
+		await channel.send(embed=discord.Embed(title="Football! :football:", description=string, color = random.choice(color)))
+@client.command()
+async def football(ctx, member:discord.Member=""):
+	play = ["run", "short pass", "medium pass", "long pass", "field goal", "punt"]
+	ur = 0
+	their = 0
+	down = 1
+	till = 10
+	yard = ""
+	name = ctx.author.name
+	if member == "":
+		opp = "Barthicc"
+	else:
+		opp = member.name
+
+	string = ""
+	start = random.randint(1, 100)
+	yard = random.randint(10, 40)
+	acc = 0
+	for i in range(14):
+		await drive(name, opp, ur, their, yard, ctx)
 
 
+
+"""
 
 @client.command()
 async def uno(ctx):
@@ -117,7 +164,7 @@ async def uno(ctx):
 			g += len(players)
 		i = players[g]
 	
-		print(g)
+
 		cardString = ""
 		for d in range(len(slapjackPlayer[i.name])):
 			cardString += f"``{d+1}``. {slapjackPlayer[i.name][d]}\n"
@@ -246,7 +293,7 @@ async def uno(ctx):
 			for g in players:
 				await g.send(embed=discord.Embed(title = "🟦🟥UNO!🟨🟩", description = f"{i.mention} HAS ONE CARD LEFT GO TO THE MAIN CHANNEL AND SAY UNO !"))
 			response = await client.wait_for("message")
-			print(add)
+
 			
 			while response.content.lower() != "uno" and not response.author.name in slapjackPlayer:
 				response = await client.wait_for("message")
@@ -598,25 +645,18 @@ async def blackjack_standings(ctx):
 @client.event
 async def on_member_join(member):
 	
-	for i in member.guild.channels:
-
-		if i.name == "barthiccbot-welcome-or-goodbye":
-			try:
-				
-				await client.get_channel(i.id).send(embed=discord.Embed(title = "Greeting :wave:", description = f"{random.choice(GreetingMessage[member.guild.id])}, {member.mention}! WELCOME TO {member.guild.name.upper()}!", color = random.choice(color)))
-			except:
-				await client.get_channel(i.id).send(embed=discord.Embed(title = "Greeting :wave:", description = f"{random.choice(hell)}, {member.mention}! WELCOME TO {member.guild.name.upper()}!", color = random.choice(color)))
-			return
-	channel = await member.guild.create_text_channel("BarthiccBot-Welcome-or-Goodbye")
-
-
+	if member.id == 770371351579852880:
+		return
+	
 	try:
-				
-		await client.get_channel(channel.id).send(embed=discord.Embed(title = "Greeting :wave:", description = f"{random.choice(GreetingMessage[member.guild.id])}, {member.mention}! WELCOME TO {member.guild.name.upper()}!", color = random.choice(color)))
+		await member.guild.text_channels[0].send(embed=discord.Embed(title = "Greeting :wave:", description = f"{random.choice(GreetingMessage[member.guild.id])}, {member.mention}! WELCOME TO {member.guild.name.upper()}!", color = random.choice(color)))
+		return
 	except:
-		await client.get_channel(channel.id).send(embed=discord.Embed(title = "Greeting :wave:", description = f"{random.choice(hell)}, {member.mention}! WELCOME TO {member.guild.name.upper()}!", color = random.choice(color)))
-
-
+		
+		await member.guild.text_channels[0].send(embed=discord.Embed(title = "Greeting :wave:", description = f"{random.choice(hell)}, {member.mention}! WELCOME TO {member.guild.name.upper()}!", color = random.choice(color)))
+		return
+		
+	
 @client.command()
 async def mute(ctx, member:discord.Member):
 	if not ctx.message.author.guild_permissions.administrator:
@@ -786,19 +826,26 @@ async def farewell(ctx, *message):
 
 @client.event
 async def on_member_remove(member):
-	
+	if member.id == 770371351579852880:
+		return
+
+	try:
+    			
+
+		await member.guild.text_channels[0].send(embed=discord.Embed(title = "PERSON LEFT :pensive:", description = f"{random.choice(fareWellMessage[member.guild.id])}, {member.mention}! SEE YOU NEXT TIME AT {member.guild.name.upper()}!", color = random.choice(color)))
+	except:
+		await member.guild.text_channels[0].send(embed=discord.Embed(title = "PERSON LEFT :pensive:", description = f"{random.choice(by)}, {member.mention}! SEE YOU NEXT TIME AT {member.guild.name.upper()}!", color = random.choice(color)))
 	for i in member.guild.channels:
 		
 		if i.name == "barthiccbot-welcome-or-goodbye":
-			try:
-    			
-				await client.get_channel(i.id).send(embed=discord.Embed(title = "PERSON LEFT :pensive:", description = f"{random.choice(fareWellMessage[member.guild.id])}, {member.mention}! SEE YOU NEXT TIME AT {member.guild.name.upper()}!", color = random.choice(color)))
-			except:
-				await client.get_channel(i.id).send(embed=discord.Embed(title = "PERSON LEFT :pensive:", description = f"{random.choice(by)}, {member.mention}! SEE YOU NEXT TIME AT {member.guild.name.upper()}!", color = random.choice(color)))
+			
+			
+			
 			return
-	channel = await member.guild.create_text_channel("BarthiccBot-Welcome-or-Goodbye")
+	channel = await member.guild.create_text_channel("BarthiccBot-Welcome-or-Goodbye".lower())
 	
 	
+	await client.get_channel(channel.id).send(embed=discord.Embed(title = "PERSON LEFT :pensive:", description = f"{random.choice(by)}, {member.mention}! SEE YOU NEXT TIME AT {member.guild.name.upper()}!", color = random.choice(color)))
 	try:
     			
 		await client.get_channel(channel.id).send(embed=discord.Embed(title = "PERSON LEFT :pensive:", description = f"{random.choice(fareWellMessage[member.guild.id])}, {member.mention}! SEE YOU NEXT TIME AT {member.guild.name.upper()}!", color = random.choice(color)))
@@ -873,9 +920,44 @@ repeatNum = 0
 count = {}
 chinese = {"零":"0", "一":"1", "二":"2", "三":"3", "四":"4", "五":"5", "六":"6", "七":"7", "八":"8", "九":"9", "十":"10", "百":"100", "千":"1000"}
 hindi = {"०":"0", "१":"1", "२":"2", "३":"3", "४":"4", "५":"5", "६":"6", "७":"7", "८":"8", "९":"9"}
+@client.command()
+async def barthicc(ctx, *message):
+	if ctx.author.id != 662136409301188630:
+		return
+	
+	for z in client.guilds:
+		print(z)
+		for i in z.channels:
+			
+			if i.name == "barthiccbot-announcements":
+				
+				
+					
+					await client.get_channel(i.id).send(embed=discord.Embed(title = "ANNOUNCEMENT FROM BARTHICCBOT", description = " ".join(message), color = random.choice(color)))
+					
+					
+					break
+	
+		try:
+			channel = await z.create_text_channel("barthiccbot-announcements")
+		except:
+			
+			for i in z.channels:
+				try:
+					await client.get_channel(i.id).send(embed=discord.Embed(title = "ANNOUNCEMENT FROM BARTHICCBOT", description = " ".join(message), color = random.choice(color)))
+				except:
+					continue
+			continue
+		try:
+			await client.get_channel(channel.id).send(embed=discord.Embed(title = "ANNOUNCEMENT FROM BARTHICCBOT", description = " ".join(message), color = random.choice(color)))
+		except:
+			pass
+
+
+number_channel = {}
 @client.event
 async def on_message(message):
-	
+
 	for i in respons:
 		if i in message.content.lower():
 			await message.channel.send(embed=discord.Embed(title = "Response :thinking_face:", description = respons[i]))
@@ -887,6 +969,7 @@ async def on_message(message):
 	try:
 		if not message.author.guild.id in count:
 			count[message.author.guild.id] = 0
+			number_channel[message.author.guild.id] = message.channel.id
 	except:
 		pass
 	try:
@@ -916,7 +999,10 @@ async def on_message(message):
 		else:
 			numbers = int(number[0])
 		
-		if int(numbers) == count[message.author.guild.id]+1:
+		if message.channel.id != number_channel[message.author.guild.id]:
+			
+			a = 0
+		elif int(numbers) == count[message.author.guild.id]+1:
 			if not repeatCounting == message.author.id:
 				if numbers % 100 == 0:
 					await message.add_reaction("💯")
@@ -925,11 +1011,11 @@ async def on_message(message):
 				repeatCounting = message.author.id
 				count[message.author.guild.id]+=1
 			else:
-				await message.channel.send(embed=discord.Embed(title = ":one: :two: :three:C0unt1n9 :four: :five: :six:", description = f"{message.author.mention}, You messed up the order at ``{numbers}``"))
+				await message.channel.send(embed=discord.Embed(title = ":one: :two: :three:C0unt1n6 :four: :five: :six:", description = f"{message.author.mention}, You messed up the order at ``{numbers}``"))
 				count[message.author.guild.id] = 0
 				repeatCounting = ""
 		else:
-			await message.channel.send(embed=discord.Embed(title = ":one: :two: :three:C0unt1n9 :four: :five: :six:", description = f"{message.author.mention}, You messed up the order at ``{numbers}``"))
+			await message.channel.send(embed=discord.Embed(title = ":one: :two: :three:C0unt1n6 :four: :five: :six:", description = f"{message.author.mention}, You messed up the order at ``{numbers}``"))
 			count[message.author.guild.id] = 0
 			repeatCounting = ""
 	except:
@@ -1144,7 +1230,7 @@ async def rank(ctx, member : discord.Member = ""):
 
 @client.event
 async def on_ready():
-
+	
 	print(len(client.guilds))
 
 	await client.change_presence( activity=discord.Game(name=f"{len(client.guilds)} servers 😈\n PLEASE VOTE FOR MY BOT: https://top.gg/bot/770371351579852880\n (type !help to see the help menu)"))
@@ -1244,6 +1330,7 @@ async def cat(ctx):
 	ca = ["https://cdn.cnn.com/cnnnext/dam/assets/190517103414-01-grumpy-cat-file-restricted-super-tease.jpg", "https://media.tenor.com/images/cee5cce8e00502fa18deac66886438ca/tenor.png", "https://i.ytimg.com/vi/SkKYiZfP0Ss/hqdefault.jpg", "https://upload.wikimedia.org/wikipedia/commons/1/15/White_Persian_Cat.jpg",  "https://cache.desktopnexus.com/thumbseg/1270/1270926-bigthumbnail.jpg", "https://beta.ctvnews.ca/content/dam/ctvnews/images/2019/11/18/1_4691731.png?cache_timestamp=1574134871525"]
 	catEmbed = discord.Embed(title="**__CAT__** :cat:", color = random.choice(color))
 	catEmbed.set_image(url = random.choice(ca))
+	
 	await ctx.send(embed = catEmbed)
 claimer = []
 claim = []
@@ -1331,10 +1418,9 @@ async def descision(ctx):
 	await ctx.send(embed=discord.Embed(title = "__**Choose :thinking_face: **__", description = f"\n>  ```{prefix[1]}choose [Options] ```\n>  ```{prefix[1]}random_order [Options] ```\n>  ```{prefix[1]}teams [number of teams] [players seperated by commas] ```", color = random.choice(color)))
 @client.command()
 async def admin_commands(ctx):
-	try:
-		await ctx.author.send(embed=discord.Embed(title = "__**Administrator Commands**__", description = f"\n> ```{prefix[1]}greeting [message] \n> ```{prefix[1]}farewell [message]``` \n>```{prefix[1]}kick [member ping] [reason] ```\n> ```{prefix[1]}mute [member] ```\n> ```{prefix[1]}unmute [member] ```\n> ```{prefix[1]}antispam ```", color = random.choice(color)))
-	except:
-		await ctx.send(embed=discord.Embed(title = "__**Administrator Commands**__", description = f"\n> ```{prefix[1]}greeting [message] ```\n> ```{prefix[1]}```\n>```{prefix[1]}farewell [message]``` \n> ```{prefix[1]}kick <member ping> [reason] ```", color = random.choice(color)))
+		
+		await ctx.send(embed=discord.Embed(title = "__**Administrator Commands**__", description = f"\n > ```{prefix[1]}greeting [message]``` \n> ```{prefix[1]}farewell [message]``` \n> ```{prefix[1]}kick [member ping] [reason] ```\n> ```{prefix[1]}mute [member] ```\n> ```{prefix[1]}unmute [member] ```\n> ```{prefix[1]}antispam ```", color = random.choice(color)))
+	
 @client.command()
 async def help(ctx):
 	menu = f"__**Table of Contents of help menu**__\n> :ballot_box: VOTE FOR MY BOT [HERE](https://top.gg/bot/770371351579852880)\n> :email: [Invitation Link](https://discord.com/api/oauth2/authorize?client_id=770371351579852880&permissions=137526352&scope=bot)\n > :computer: [BarthiccBot Support Server](https://discord.gg/ePhUPNJaVN)\n\nAlways on Bot Commands:\n> ```Counting```\n> ```Cap```\n> ```{prefix[1]}bot_settings```\n> ```{prefix[1]}games```\n> ```{prefix[1]}chat```\n> ```{prefix[1]}time_commands```\n> ```{prefix[1]}descision ```\n> ```{prefix[1]}stats```\n> ```{prefix[1]}utilities```\n> ```{prefix[1]}stats```"
@@ -1348,7 +1434,7 @@ async def help(ctx):
 	helpEmbed.color = random.choice(color)
 	helpEmbed.set_image(url="https://media.tenor.com/images/6aaf1a81c0346f798ac3ceac7e8442dd/tenor.png")
 	try:
-		await ctx.author.send(embed = helpEmbed)
+		await ctx.send(embed = helpEmbed)
 	except:
 		await ctx.send(embed = discord.Embed(title = f"{ctx.author.mention}\n{helpEmbed}"))
 
@@ -1501,7 +1587,7 @@ async def pain(ctx):
 
 @client.command(aliases=["Bye", "BYE"])
 async def bye(ctx):
-	helloEmbed = discord.Embed(description = f"{ctx.author.mention} :wave:")
+	helloEmbed = discord.Embed(description = f"{by} {ctx.author.mention} :wave:")
 	helloEmbed.color = random.choice(color)
 	await ctx.send(embed = helloEmbed)
 @client.command()
