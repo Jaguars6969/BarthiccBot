@@ -1,0 +1,58 @@
+global repeatCounting
+	try:
+		if not message.author.guild.id in count:
+			count[message.author.guild.id] = 0
+			
+	except:
+		pass
+	try:
+		numberString = ""
+		number = message.content.split(" ")
+		if number[0][0] in chinese:
+			
+			if len(number[0]) == 1:
+				numberString = chinese[number[0][0]]
+			elif len(number[0]) == 2:
+				if number[0][0] == "十":
+					numberString += "1" + chinese[number[0][1]]
+				elif number[0][1] == "十":
+					numberString +=  chinese[number[0][1]] + "0"
+				elif number[0][1] == "百":
+					numberString +=  chinese[number[0][1]] + "00"
+				elif number[0][1] == "千":
+					numberString +=  chinese[number[0][1]] + "000"
+		
+			else:
+				for i in range(0, len(number[0]), 2):
+					numberString += chinese[number[0][i]]
+			numbers = int(numberString)
+		elif number[0][0] in hindi:
+			for i in number[0]:
+				numberString += hindi[i]
+		else:
+			numbers = int(number[0])
+		
+		if (message.author.guild.id in number_channel and message.channel.id != number_channel[message.author.guild.id]) or len(number) > 1 or  numbers - count[message.author.guild.id] >  10:
+			
+			a = 0
+		elif int(numbers) == count[message.author.guild.id]+1:
+			if not message.author.guild.id in number_channel:
+				number_channel[message.author.guild.id] = message.channel.id
+			if not repeatCounting == message.author.id:
+				if numbers % 100 == 0:
+					await message.add_reaction("💯")
+				else:
+					await message.add_reaction("👍")
+				repeatCounting = message.author.id
+				count[message.author.guild.id]+=1
+			else:
+				await message.channel.send(embed=discord.Embed(title = ":one: :two: :three:C0unt1n6 :four: :five: :six:", description = f"{message.author.mention}, You messed up the order at ``{numbers}``"))
+				count[message.author.guild.id] = 0
+				repeatCounting = ""
+		else:
+			await message.channel.send(embed=discord.Embed(title = ":one: :two: :three:C0unt1n6 :four: :five: :six:", description = f"{message.author.mention}, You messed up the order at ``{numbers}``"))
+			count[message.author.guild.id] = 0
+			repeatCounting = ""
+	except:
+		pass
+	

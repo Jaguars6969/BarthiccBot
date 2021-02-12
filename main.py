@@ -64,7 +64,9 @@ async def on_guild_join(guild):
 	except:
 
 		pass
-"""async def drive(name, opp, ur, their, yard, channel):
+async def drive(name, opp, ur, their, yard, yards, touchdowns, picks, channel):
+	Off = ["run", "short pass", "medium pass", "long pass", "field goal", "punt"]
+	Def = ["blitz", "man", "zone"]
 	while yard <= 100 and yard >=0:
 		down = 1
 		till = 10
@@ -77,19 +79,42 @@ async def on_guild_join(guild):
 			yard += f"On {opp[0:3].upper()} {100-yard} "
 		else:
 			yard += "You are on the 50 yard line"
-		string += f"\n{ur} - {their}\n"
-		await channel.send(embed=discord.Embed(title="Football! :football:", description=string, color = random.choice(color)))
+		string += f"\n{ur} - {their}\n{name}'s stats\n{yards} yards\n{touchdowns} touchdowns\n{picks} picks\n"
+		if opp != "BarthiccBot":
+			string += "\nDefense, choose your play:\n\n :football: Man\n :football: Zone\n :football: Blitz"
+
+			await channel.send(embed=discord.Embed(title="Football! :football:", description=string, color = random.choice(color)))
+			response = await client.wait_for("message")
+			while response.author.name != opp.name or not response.content.lower() in Def:
+				if not response.content.lower() in Def:
+					await channel.send(embed=discord.Embed(title="Football! :football:", description="That is not one of the options\n\nDefense, choose your play:\n\n :football: Man\n :football: Zone\n :football: Blitz", color = random.choice(color)))
+				response = await client.wait_for("message")
+			await channel.send(embed=discord.Embed(title="Football! :football:", description=f"{opp} chose {response.content}", color = random.choice(color)))
+		else:
+			await channel.send(embed=discord.Embed(title="Football! :football:", description=f"BarthiccBot chose {random.choice(Def)}", color = random.choice(color)))
+		await channel.send(embed=discord.Embed(title="Football! :football:", description="Offense it is your turn, choose your play:\n\n :football: Run\n :football: Short pass\n :football: Medium Pass\n :football: Long Pass\n :football Field Goal\n :football: Punt", color = random.choice(color)))
+		response = await client.wait_for("message")
+		while response.author.name != name or not response.content.lower() in Def:
+			if not response.content.lower() in Def:
+				await channel.send(embed=discord.Embed(title="Football! :football:", description="That is not one of the options Offense it is your turn, choose your play:\n\n :football: Run\n :football: Short pass\n :football: Medium Pass\n :football: Long Pass\n :football Field Goal\n :football: Punt", color = random.choice(color)))
+			response = await client.wait_for("message")
 @client.command()
 async def football(ctx, member:discord.Member=""):
-	play = ["run", "short pass", "medium pass", "long pass", "field goal", "punt"]
+	
 	ur = 0
 	their = 0
+	uryard = 0
+	theyard = 0
+	urtouchdowns = 0
+	thetouchdowns = 0
+	urpicks = 0
+	thepicks = 0
 	down = 1
 	till = 10
 	yard = ""
 	name = ctx.author.name
 	if member == "":
-		opp = "Barthicc"
+		opp = "BarthiccBot"
 	else:
 		opp = member.name
 
@@ -98,11 +123,11 @@ async def football(ctx, member:discord.Member=""):
 	yard = random.randint(10, 40)
 	acc = 0
 	for i in range(14):
-		await drive(name, opp, ur, their, yard, ctx)
+		await drive(name, opp, ur, their, yard, uryard, urtouchdowns, urpicks, ctx)
 
 
 
-"""
+
 
 @client.command()
 async def uno(ctx):
@@ -965,63 +990,6 @@ async def on_message(message):
 		
 	
 	
-	global repeatCounting
-	try:
-		if not message.author.guild.id in count:
-			count[message.author.guild.id] = 0
-			
-	except:
-		pass
-	try:
-		numberString = ""
-		number = message.content.split(" ")
-		if number[0][0] in chinese:
-			
-			if len(number[0]) == 1:
-				numberString = chinese[number[0][0]]
-			elif len(number[0]) == 2:
-				if number[0][0] == "十":
-					numberString += "1" + chinese[number[0][1]]
-				elif number[0][1] == "十":
-					numberString +=  chinese[number[0][1]] + "0"
-				elif number[0][1] == "百":
-					numberString +=  chinese[number[0][1]] + "00"
-				elif number[0][1] == "千":
-					numberString +=  chinese[number[0][1]] + "000"
-		
-			else:
-				for i in range(0, len(number[0]), 2):
-					numberString += chinese[number[0][i]]
-			numbers = int(numberString)
-		elif number[0][0] in hindi:
-			for i in number[0]:
-				numberString += hindi[i]
-		else:
-			numbers = int(number[0])
-		
-		if message.author.guild.id in number_channel and message.channel.id != number_channel[message.author.guild.id]:
-			
-			a = 0
-		elif int(numbers) == count[message.author.guild.id]+1:
-			if not message.author.guild.id in number_channel:
-				number_channel[message.author.guild.id] = message.channel.id
-			if not repeatCounting == message.author.id:
-				if numbers % 100 == 0:
-					await message.add_reaction("💯")
-				else:
-					await message.add_reaction("👍")
-				repeatCounting = message.author.id
-				count[message.author.guild.id]+=1
-			else:
-				await message.channel.send(embed=discord.Embed(title = ":one: :two: :three:C0unt1n6 :four: :five: :six:", description = f"{message.author.mention}, You messed up the order at ``{numbers}``"))
-				count[message.author.guild.id] = 0
-				repeatCounting = ""
-		else:
-			await message.channel.send(embed=discord.Embed(title = ":one: :two: :three:C0unt1n6 :four: :five: :six:", description = f"{message.author.mention}, You messed up the order at ``{numbers}``"))
-			count[message.author.guild.id] = 0
-			repeatCounting = ""
-	except:
-		pass
 	
 	pop = message.content.lower().split()
 	if "am" in pop or "are" in pop or "is" in pop or "has"in pop or "have" in pop and not pop[1] in ["is", "where","who","what","why", "when"]:
