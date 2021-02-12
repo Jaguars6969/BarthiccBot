@@ -1,4 +1,4 @@
-#emoji and link checker
+#770371351579852880
 import discord
 from discord.ext import commands
 from webbot import Browser
@@ -64,7 +64,7 @@ async def on_guild_join(guild):
 	except:
 
 		pass
-async def drive(name, opp, ur, their, yard, yards, touchdowns, picks, channel):
+"""async def drive(name, opp, ur, their, yard, yards, touchdowns, picks, channel):
 	Off = ["run", "short pass", "medium pass", "long pass", "field goal", "punt"]
 	Def = ["blitz", "man", "zone"]
 	while yard <= 100 and yard >=0:
@@ -127,7 +127,7 @@ async def football(ctx, member:discord.Member=""):
 
 
 
-
+"""
 
 @client.command()
 async def uno(ctx):
