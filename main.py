@@ -1923,7 +1923,7 @@ async def on_ready():
 				for i in range(1, len(x), 2):
 					row[x[i]] = x[i+1]
 				servers[x[0]] = row
-		asyncio.sleep(86300)
+		await asyncio.sleep(86300)
 		with open('standings.csv', mode='w') as standings:
 			employee_writer = csv.writer(standings, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 			
