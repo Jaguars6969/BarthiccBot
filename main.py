@@ -64,43 +64,14 @@ async def on_guild_join(guild):
 	except:
 
 		pass
-"""async def drive(name, opp, ur, their, yard, yards, touchdowns, picks, channel):
-	Off = ["run", "short pass", "medium pass", "long pass", "field goal", "punt"]
-	Def = ["blitz", "man", "zone"]
-	while yard <= 100 and yard >=0:
-		down = 1
-		till = 10
-		string = ""
-		
-		string += f"{down} & {till}\n"
-		if yard < 50:
-			string += f"On {name[0:3].upper()} {yard}"
-		elif yard > 50:
-			yard += f"On {opp[0:3].upper()} {100-yard} "
-		else:
-			yard += "You are on the 50 yard line"
-		string += f"\n{ur} - {their}\n{name}'s stats\n{yards} yards\n{touchdowns} touchdowns\n{picks} picks\n"
-		if opp != "BarthiccBot":
-			string += "\nDefense, choose your play:\n\n :football: Man\n :football: Zone\n :football: Blitz"
 
-			await channel.send(embed=discord.Embed(title="Football! :football:", description=string, color = random.choice(color)))
-			response = await client.wait_for("message")
-			while response.author.name != opp.name or not response.content.lower() in Def:
-				if not response.content.lower() in Def:
-					await channel.send(embed=discord.Embed(title="Football! :football:", description="That is not one of the options\n\nDefense, choose your play:\n\n :football: Man\n :football: Zone\n :football: Blitz", color = random.choice(color)))
-				response = await client.wait_for("message")
-			await channel.send(embed=discord.Embed(title="Football! :football:", description=f"{opp} chose {response.content}", color = random.choice(color)))
-		else:
-			await channel.send(embed=discord.Embed(title="Football! :football:", description=f"BarthiccBot chose {random.choice(Def)}", color = random.choice(color)))
-		await channel.send(embed=discord.Embed(title="Football! :football:", description="Offense it is your turn, choose your play:\n\n :football: Run\n :football: Short pass\n :football: Medium Pass\n :football: Long Pass\n :football Field Goal\n :football: Punt", color = random.choice(color)))
-		response = await client.wait_for("message")
-		while response.author.name != name or not response.content.lower() in Def:
-			if not response.content.lower() in Def:
-				await channel.send(embed=discord.Embed(title="Football! :football:", description="That is not one of the options Offense it is your turn, choose your play:\n\n :football: Run\n :football: Short pass\n :football: Medium Pass\n :football: Long Pass\n :football Field Goal\n :football: Punt", color = random.choice(color)))
-			response = await client.wait_for("message")
+			
+
+
+
+			
 @client.command()
 async def football(ctx, member:discord.Member=""):
-	
 	ur = 0
 	their = 0
 	uryard = 0
@@ -111,7 +82,8 @@ async def football(ctx, member:discord.Member=""):
 	thepicks = 0
 	down = 1
 	till = 10
-	yard = ""
+	yard = 0
+	
 	name = ctx.author.name
 	if member == "":
 		opp = "BarthiccBot"
@@ -123,11 +95,83 @@ async def football(ctx, member:discord.Member=""):
 	yard = random.randint(10, 40)
 	acc = 0
 	for i in range(14):
-		await drive(name, opp, ur, their, yard, uryard, urtouchdowns, urpicks, ctx)
+		passin_yards = 0
+		Off = ["run", "short pass", "medium pass", "long pass", "field goal", "punt"]
+		Def = ["blitz", "man", "zone"]
+		down = 0
+		till = 10
+		while yard <= 100 and yard >=0:
+			if till <= 0:
+				till =10
+				down = 0
+			if down == 4:
+				await ctx.send(embed=discord.Embed(title="Football! :football:", description="Turn over on downs", color = random.choice(color)))
+				uryard += passin_yards
+				break
+			down += 1
+			string = ""
+			
+			string += f"{down} & {till}\n"
+			if yard < 50:
+				string += f"On {name[0:3].upper()} {yard}"
+			elif yard > 50:
+				string += f"On {opp[0:3].upper()} {100-yard} "
+			else:
+				string += "You are on the 50 yard line"
+			string += f"\n{ur} - {their}\n{name}'s stats\n{uryard} yards\n{urtouchdowns} touchdowns\n{urpicks} picks\n"
+			await ctx.send(embed=discord.Embed(title="Football! :football:", description=string, color = random.choice(color)))
+			if opp != "BarthiccBot":
+				string += "\nDefense, choose your play:\n\n :football: Man\n :football: Zone\n :football: Blitz"
+
+				await ctx.send(embed=discord.Embed(title="Football! :football:", description=string, color = random.choice(color)))
+				response = await client.wait_for("message")
+				while response.author.name != opp.name or not response.content.lower() in Def:
+					if not response.content.lower() in Def:
+						await ctx.send(embed=discord.Embed(title="Football! :football:", description="That is not one of the options\n\nDefense, choose your play:\n\n :football: Man\n :football: Zone\n :football: Blitz", color = random.choice(color)))
+					response = await client.wait_for("message")
+				await ctx.send(embed=discord.Embed(title="Football! :football:", description=f"{opp} chose his play", color = random.choice(color)))
+			
+			await ctx.send(embed=discord.Embed(title="Football! :football:", description="Offense it is your turn, choose your play:\n\n :football: Run\n :football: Short pass\n :football: Medium Pass\n :football: Long Pass\n :football Field Goal\n :football: Punt", color = random.choice(color)))
+			offresponse = await client.wait_for("message")
+			while offresponse.author.name != name or not offresponse.content.lower() in Off:
+				if offresponse.author.name == name and not offresponse.content.lower() in Off:
+					await ctx.send(embed=discord.Embed(title="Football! :football:", description="That is not one of the options Offense it is your turn, choose your play:\n\n :football: Run\n :football: Short pass\n :football: Medium Pass\n :football: Long Pass\n :football: Field Goal\n :football: Punt", color = random.choice(color)))
+				offresponse = await client.wait_for("message")
+			rand = random.randint(0, 100)
+			if offresponse.content.lower() == "run":
+				if 0 <= rand <= 40:
+					gain = random.randint(0, 10)
+					await ctx.send(embed=discord.Embed(title="Football! :football:", description=f"Your runner ran {gain} yards", color = random.choice(color)))
+				elif 40 <= rand <= 70:
+					gain = random.randint(-5, 0)
+					await ctx.send(embed=discord.Embed(title="Football! :football:", description=f"Your runner lost {gain * -1} yards", color = random.choice(color)))
+				elif 70 <= rand <= 90:
+					gain = random.randint(10, 25)
+					await ctx.send(embed=discord.Embed(title="Football! :football:", description=f"Your runner ran {gain} yards ", color = random.choice(color)))
+				elif 90 <= rand <= 95:
+					
+					await ctx.send(embed=discord.Embed(title="Football! :football:", description=f"YOUR RUNNER RAN INTO THE ENDZONE!!! TOUCHDOWN TEAM {name.upper()}", color = random.choice(color)))
+					ur += 6
+					await asyncio.time(1)
+					if random.randint(0, 100) < 96:
+						await ctx.send(embed=discord.Embed(title="The field goal is good", color = random.choice(color)))
+						ur+=1
+					else:
+						await ctx.send(embed=discord.Embed(title="The field goal is no good", color = random.choice(color)))
+					yard = 0
+					break
+
+				elif 95 <= rand <= 100:
+					gain = random.randint(10, 25)
+					await ctx.send(embed=discord.Embed(title="Football! :football:", description=f"Your runner ran {gain} yards", color = random.choice(color)))
+
+
+				yard += gain
+				till -= gain
 
 
 
-"""
+
 
 @client.command()
 async def uno(ctx):
@@ -675,11 +719,14 @@ async def on_member_join(member):
 	
 	try:
 		await member.guild.text_channels[0].send(embed=discord.Embed(title = "Greeting :wave:", description = f"{random.choice(GreetingMessage[member.guild.id])}, {member.mention}! WELCOME TO {member.guild.name.upper()}!", color = random.choice(color)))
-		return
+
 	except:
-		
-		await member.guild.text_channels[0].send(embed=discord.Embed(title = "Greeting :wave:", description = f"{random.choice(hell)}, {member.mention}! WELCOME TO {member.guild.name.upper()}!", color = random.choice(color)))
-		return
+		try:
+			await member.guild.text_channels[0].send(embed=discord.Embed(title = "Greeting :wave:", description = f"{random.choice(hell)}, {member.mention}! WELCOME TO {member.guild.name.upper()}!", color = random.choice(color)))
+		except:
+			print(member.guild.name)
+			await member.guild.text_channels[1].send(embed=discord.Embed(title = "Greeting :wave:", description = f"{random.choice(hell)}, {member.mention}! WELCOME TO {member.guild.name.upper()}!", color = random.choice(color)))
+
 		
 	
 @client.command()
@@ -1196,53 +1243,6 @@ async def rank(ctx, member : discord.Member = ""):
 	astro.set_author(name=f'{person.name} Rank Card', icon_url = person.avatar_url)
 	await ctx.send(embed=astro)
 	
-
-
-@client.event
-async def on_ready():
-	
-	print(len(client.guilds))
-
-	await client.change_presence( activity=discord.Game(name=f"{len(client.guilds)} servers 😈\n PLEASE VOTE FOR MY BOT: https://top.gg/bot/770371351579852880\n (type !help to see the help menu)"))
-
-
-
-
-"""@client.command(pass_context=True)
-async def join(ctx):
-	channel = ctx.message.author.voice.voice_channel
-	await client.join_voice_channel(channel)
-
-
-@client.command(pass_context=True)
-async def leave(ctx):
-	server = ctx.message.server
-	voice_client = client.voice_client_id(server)
-	await voice_client.disconnect()
-
-@client.command(pass_context=True)
-async def play(ctx, url):
-	server = ctx.message.server
-	voice_client = client.voice_client_id(server)
-	player = await voice_client.create_ytdl_player(url)
-	players[server.id] = player
-	player.start()
-
-
-@client.command(pass_context = True)
-async def pause(ctx):
-	id = ctx.message.server.id
-	players[id].pause()
-
-@client.command(pass_context = True)
-async def stop(ctx):
-	id = ctx.message.server.id
-	players[id].stop()
-
-@client.command(pass_context = True)
-async def resume(ctx):
-	id = ctx.message.server.id
-	players[id].resume()"""
 
 
 @client.command()
@@ -1908,7 +1908,40 @@ async def choose(ctx, *messages):
 
 	await ctx.send(embed=discord.Embed(title = "Choose :thinking_face:", description = f"{ctxString}", color = random.choice(color)))
 
+import csv
 
+@client.event
+async def on_ready():
+	global servers
+	print(len(client.guilds))
+
+	await client.change_presence( activity=discord.Game(name=f"{len(client.guilds)} servers 😈\n PLEASE VOTE FOR MY BOT: https://top.gg/bot/770371351579852880\n (type !help to see the help menu)"))
+	while True:
+		with open('standings.csv') as csv_file:
+			for x in csv.reader(csv_file,delimiter=','):
+				row = {}
+				for i in range(1, len(x), 2):
+					row[x[i]] = x[i+1]
+				servers[x[0]] = row
+		asyncio.sleep(86300)
+		with open('standings.csv', mode='w') as standings:
+			employee_writer = csv.writer(standings, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+			
+			for i in servers:
+				wok = [str(i)]
+				for x in servers[i]:
+					wok.append(x)
+					wok.append(servers[i][x])
+
+				employee_writer.writerow(wok)
+
+
+	
+	
+
+	
+
+				
 client.run("NzcwMzcxMzUxNTc5ODUyODgw.X5cmOw.ro1Wl0rToU8FodI2wcLo4r3RLvo")
 
     
